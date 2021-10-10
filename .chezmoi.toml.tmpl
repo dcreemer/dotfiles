@@ -1,5 +1,8 @@
 {{- $email := promptString "email" -}}
 {{- $location := promptString "location? (home|work|other)" -}}
+{{- $profile := promptString "profile? (basic|full)" -}}
 [data]
     email = "{{ $email }}"
     location = "{{ $location }}"
+    profile = "{{ $profile }}"
+    
