@@ -1,3 +1,28 @@
 [user]
     name = David Creemer
     email = {{ .email }}
+
+[color]
+	diff = auto
+	status = auto
+	branch = auto
+
+[push]
+	default = nothing
+
+[gpg]
+	program = gpg
+
+{{ if eq .location "home" -}}
+[commit]
+	gpgsign = true
+{{ end -}}
+
+[credential "https://gitlab.com"]
+	username = dcreemer
+
+[github]
+	user = dcreemer
+
+[pull]
+	rebase = false
