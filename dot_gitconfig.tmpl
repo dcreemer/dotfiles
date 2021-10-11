@@ -1,6 +1,10 @@
 [user]
-    name = David Creemer
-    email = {{ .email }}
+	name = David Creemer
+	email = {{ .email }}
+	useConfigOnly = true
+{{- if eq .location "home" }}
+	signingkey = {{ secret "-p" "gpg-key-id" }}
+{{- end }}
 
 [color]
 	diff = auto
