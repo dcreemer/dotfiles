@@ -5,33 +5,47 @@
 brew install bash
 brew install bash-completion
 brew install direnv
+brew install git
 brew install gnupg
+brew install wget
 brew install --cask appcleaner
 brew install --cask finicky
 
 {{ if eq .profile "full" -}}
 brew install expect
+brew install fzf
 brew install jq
 brew install mas
 brew install pyenv
 brew install ripgrep
+brew install shellcheck
+brew install topgrade
+brew install tree
+
+brew install --cask 1password-cli
+brew install --cask firefox
+brew install --cask google-chrome
+brew install --cask soundsource
+brew install --cask visual-studio-code
+
+brew tap homebrew/cask-fonts
+brew install --cask font-bitstream-vera
+
+{{ if eq .location "home" -}}
 brew install rustup-init
 brew install rustup-analyzer
 
-brew install --cask 1password-cli
 brew install --cask calibre
-brew install --cask firefox
-brew install --cask google-chrome
 brew install --cask onedrive
 brew install --cask roon
 brew install --cask signal
-brew install --cask soundsource
-brew install --cask visual-studio-code
 {{ end -}}
 
 {{ if eq .location "work" -}}
 brew install --cask charles
 brew install --case dbeaver-enterprise
+{{ end -}}
+
 {{ end -}}
 
 {{ end -}}

@@ -1,14 +1,16 @@
 {{ if eq .chezmoi.os "linux" -}}
 
 #!/bin/sh
+sudo apt install build-essential
 sudo apt install direnv
 sudo apt install gnupg
 
 {{ if eq .profile "full" -}}
-sudo apt install expect
-sudo apt install jq
 sudo apt install ripgrep
-sudo apt install xclip
+# for 1pass
+sudo apt install expect jq xclip
+# for python pyenv
+sudo apt install libbz2-dev libsqlite3-dev libffi-dev libreadline-dev
 {{ end -}}
 
 {{ end -}}
