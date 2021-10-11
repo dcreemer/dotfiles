@@ -1,6 +1,14 @@
 {{ if eq .chezmoi.os "linux" -}}
 
 #!/bin/sh
+sudo apt install direnv
+sudo apt install gnupg
+
+{{ if eq .profile "full" -}}
+sudo apt install expect
+sudo apt install jq
 sudo apt install ripgrep
+sudo apt install xclip
+{{ end -}}
 
 {{ end -}}
