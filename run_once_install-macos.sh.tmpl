@@ -33,12 +33,13 @@ brew install --cask font-bitstream-vera
 
 {{ if eq .location "home" -}}
 brew install rustup-init
-brew install rustup-analyzer
+brew install rust-analyzer
 
 brew install --cask calibre
 brew install --cask onedrive
 brew install --cask roon
 brew install --cask signal
+brew install --cask zoom
 {{ end -}}
 
 {{ if eq .location "work" -}}
