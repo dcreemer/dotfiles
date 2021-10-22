@@ -945,11 +945,6 @@
   (setq cljr-inject-dependencies-at-jack-in nil)
   (setq nrepl-log-messages t))
 
-(use-package parinfer
-  :ensure t
-  :bind ("C-," . parinfer-toggle-mode)
-  :hook (clojure-mode . parinfer-mode))
-
 ;; Go
 (use-package go-mode
   :mode "\\.go\\'"
