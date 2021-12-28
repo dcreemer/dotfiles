@@ -16,7 +16,7 @@ obj.__index = obj
 
 
 local function journalTitle(t)
-    return "Journal for " .. bear.template_env.fullDate(t)
+    return "Journal for " .. bear.template_env.date(t)
 end
 
 local function journalTag(t)
@@ -34,22 +34,29 @@ local templates = {
     daily = "64139FEB-01F5-4F43-A772-6C0DF1406676-38752-00000C1A951784EE",
 }
 
+-- create or open a new "today" note, based on my "daily" template
 function obj.openToday()
+    -- construct the title of the today note, and open it:
     local title = journalTitle(bear.template_env.today())
-    log.i("title:", title)
+    log.d("title:", title)
     local note = bear:openByTitle(title, true, true)
     if note then
-        log.i("found id:" .. note.identifier)
+        -- found it:
+        log.d("found id:" .. note.identifier)
     else
-        log.i("Creating new today note:" .. title)
+        -- not found -- create using our template
+        log.d("Creating new today note:" .. title)
         bear:createFromTemplate(templates["daily"])
     end
+    -- put the cursor in a nice place
     eventtap.keyStroke({'cmd'}, 'up', 0)
     for i = 1, 4 do
         eventtap.keyStroke({}, 'down', 0)
         end
 end
 
+-- Treat the currently selected note (if any) as a template, and create a new
+-- note from it.
 function obj.newFromCurrentTemplate()
     local current = bear:getCurrent()
     if not current then
@@ -61,10 +68,14 @@ function obj.newFromCurrentTemplate()
 end
 
 -- Backlinks processing
+-- This code is very lightly ported from https://github.com/cdzombak/bear-backlinks
+-- and is too "pythonic".
+-- TODO: make this more lua-ish
 
 local backlink_header = "## Backlinks"
 
 function obj._composeBacklinks(sources)
+    -- given a list of sources, compose a backlinks section
     local output = ""
     if #sources == 0 then
         output = "_No backlinks found._"
@@ -100,9 +111,12 @@ local function split(str, pat)
 end
 
 function obj._processBacklinks(nid, sources)
+    -- for a given target note (nid) and a list of source notes (sources),
+    -- compose a backlinks section and update the target note.
     note = bear:openById(nid, false, false)
     log.i("processing backlinks:", note.title)
     new_backlinks = obj._composeBacklinks(sources)
+    -- chop the notes into pre and post backlinks sections
     parts = split(note.note, backlink_header)
     if #parts < 2 then
         log.w("missing backlinks header:", note.id, note.title)
@@ -116,6 +130,7 @@ function obj._processBacklinks(nid, sources)
         table.insert(pre, parts[i])
     end
     pre_backlinks = table.concat(pre, backlink_header .. "\n") .. backlink_header
+    -- find the backlinks footer section
     footer_parts = split(parts[#parts], "%-%-%-")
     if #footer_parts < 2 then
         log.w("missing --- in footer:", note.title)
@@ -123,6 +138,7 @@ function obj._processBacklinks(nid, sources)
     end
     old_backlinks = table.remove(footer_parts, 1)
     post_backlinks = "---" .. table.concat(footer_parts, "---")
+    -- if the backlinks have change, update the note
     if old_backlinks == new_backlinks then
         log.i("backlinks already up to date:", note.title)
         return
@@ -133,6 +149,22 @@ function obj._processBacklinks(nid, sources)
     log.i("backlinks updated", nid, note.title)
 end
 
+--- obj.processBacklinks(nid)
+--- Function
+--- Scan all notes in Bear, looking for those that have opted in to the "backlinks"
+--- feature. This is done by putting in a section like this:
+--- ```
+--- ## Backlinks
+--- ---
+--- ```
+--- usually at the end of the note.
+--- For every note that has this section, we scan all notes for inbound links
+--- to this note, and construct a table of these links in this (target) note.
+---
+--- WARNING
+--- Since this modifies notes, you should backup your Bear notes before running
+--- WARNING
+---
 function obj.updateBacklinks()
     local need_backlinks = bear:search("\"" .. backlink_header .. "\"")
     -- maps a source note ID to a list of note IDs that link to the source
