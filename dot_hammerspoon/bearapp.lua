@@ -14,38 +14,9 @@ bear.token = private.bearToken
 obj = {}
 obj.__index = obj
 
--- some functions to use in templates
-
-local function startOfDay()
-    local n = os.date("*t")
-    n.hour = 0
-    n.min = 0
-    n.sec = 0
-    return n
-end
-
-local function today()
-    return os.time(startOfDay())
-end
-
-local function tomorrow()
-    return os.time(startOfDay()) + 86400
-end
-
-local function yesterday()
-    return os.time(startOfDay()) - 86400
-end
-
-local function fullDate(t)
-    return os.date("%A, %B %d, %Y", t)
-end
-
-local function isodate(t)
-    return os.date("%Y-%m-%d", t)
-end
 
 local function journalTitle(t)
-    return "Journal for " .. fullDate(t)
+    return "Journal for " .. bear.template_env.fullDate(t)
 end
 
 local function journalTag(t)
@@ -56,13 +27,6 @@ local function journalTag(t)
         os.date("%B", t)
 end
 
-bear.template_env["today"] = today
-bear.template_env["tomorrow"] = tomorrow
-bear.template_env["yesterday"] = yesterday
-bear.template_env["fullDate"] = fullDate
-bear.template_env["isodate"] = isodate
-bear.template_env["link"] = function(id, title) return bear:getLink(id, title) end
-
 bear.template_env["journalTitle"] = journalTitle
 bear.template_env["journalTag"] = journalTag
 
@@ -71,7 +35,7 @@ local templates = {
 }
 
 function obj.openToday()
-    local title = journalTitle(today())
+    local title = journalTitle(bear.template_env.today())
     log.i("title:", title)
     local note = bear:openByTitle(title, true, true)
     if note then
