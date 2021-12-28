@@ -16,7 +16,7 @@ obj.__index = obj
 
 
 local function journalTitle(t)
-    return "Journal for " .. bear.template_env.date(t)
+    return "Journal for " .. os.date("%b %d, %Y", t)
 end
 
 local function journalTag(t)
