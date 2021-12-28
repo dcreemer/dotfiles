@@ -6,7 +6,8 @@
 local keybinder = require("keybinder")
 
 local cmdShift = {'cmd', 'shift'}
-local cmdCtrlShit = {'cmd', 'ctrl', 'shift'}
+local cmdCtrl = {'cmd', 'ctrl' }
+local cmdCtrlShift = {'cmd', 'ctrl', 'shift'}
 
 -- modules containing functions to be bound to hotkeys
 local bear = require("bearapp")
@@ -35,9 +36,10 @@ local bindings = {
     {
         name = "Bear",
         bindings = {
-            {modifiers = cmdShift,    key = 'y', fn = bear.openToday },
-            {modifiers = cmdCtrlShit, key = 'y', fn = bear.newFromCurrentTemplate },
-            {modifiers = cmdCtrlShit, key = 'b', fn = bear.updateBacklinks },
+            {modifiers = cmdShift,     key = 'y', fn = bear.openJournalToday },
+            {modifiers = cmdCtrl,      key = 'y', fn = bear.openJournalAtDate },
+            {modifiers = cmdCtrlShift, key = 'y', fn = bear.newFromCurrentTemplate },
+            {modifiers = cmdCtrlShift, key = 'b', fn = bear.updateBacklinks },
         },
     },
 }

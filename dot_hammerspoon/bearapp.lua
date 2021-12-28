@@ -34,10 +34,39 @@ local templates = {
     daily = "64139FEB-01F5-4F43-A772-6C0DF1406676-38752-00000C1A951784EE",
 }
 
+-- parse date
+local function promptDate()
+    local tod = os.date("%Y-%m-%d")
+    local ok, date = hs.dialog.textPrompt("Enter date", "Format YYYY-MM-DD", tod)
+    if not date then
+        return nil
+    end
+    local y, m, d = date:match("(%d+)%-(%d+)%-(%d+)")
+    if not y or not m or not d then
+        hs.alert.show("Invalid date")
+        return nil
+    end
+    return os.time({year=y, month=m, day=d})
+end
+
 -- create or open a new "today" note, based on my "daily" template
-function obj.openToday()
+function obj.openJournalToday()
+    local today = os.time()
+    obj.openJournal(today)
+end
+
+function obj.openJournalAtDate()
+    local t = promptDate()
+    if not t then
+        return
+    end
+    obj.openJournal(t)
+end
+
+
+function obj.openJournal(date)
     -- construct the title of the today note, and open it:
-    local title = journalTitle(bear.template_env.today())
+    local title = journalTitle(date)
     log.d("title:", title)
     local note = bear:openByTitle(title, true, true)
     if note then
@@ -46,13 +75,14 @@ function obj.openToday()
     else
         -- not found -- create using our template
         log.d("Creating new today note:" .. title)
-        bear:createFromTemplate(templates["daily"])
+        env = {cur = date}
+        bear:createFromTemplate(templates["daily"], env)
     end
     -- put the cursor in a nice place
     eventtap.keyStroke({'cmd'}, 'up', 0)
     for i = 1, 4 do
         eventtap.keyStroke({}, 'down', 0)
-        end
+    end
 end
 
 -- Treat the currently selected note (if any) as a template, and create a new
