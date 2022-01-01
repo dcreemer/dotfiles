@@ -10,7 +10,6 @@ local cmdCtrl = {'cmd', 'ctrl' }
 local cmdCtrlShift = {'cmd', 'ctrl', 'shift'}
 
 -- modules containing functions to be bound to hotkeys
-local bear = require("bearapp")
 local config = require("config")
 local mouse = require("MouseCircle")
 local ksheet = require("KSheet")
@@ -36,9 +35,10 @@ local bindings = {
     {
         name = "Bear",
         bindings = {
-            {modifiers = cmdShift,     key = 'y', fn = bear.openJournalToday },
-            {modifiers = cmdCtrl,      key = 'y', fn = bear.openJournalAtDate },
-            {modifiers = cmdCtrlShift, key = 'y', fn = bear.newFromCurrentTemplate },
+            {modifiers = cmdCtrl,      key = 't', fn = bear.openJournalToday },
+            {modifiers = cmdCtrl,      key = 'j', fn = bear.openJournalAtDate },
+            {modifiers = cmdCtrl,      key = 'o', fn = bear.noteChooser },
+            {modifiers = cmdCtrlShift, key = 't', fn = bear.newFromCurrentTemplate },
             {modifiers = cmdCtrlShift, key = 'b', fn = bear.updateBacklinks },
         },
     },

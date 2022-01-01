@@ -30,6 +30,14 @@ windows.init()
 local browsers = require("browsers")
 browsers.init()
 
+-- Bear Functions
+local private = require("private")
+-- *not* local
+bear = require("Bear")
+bear.init(private.bearToken, private.bearJournalTemplateId,
+    function(date) return "Journal for " .. os.date("%b %d, %Y", date) end
+)
+
 -- all other hotkeys
 local keymap = require("keymap")
 keymap.init()

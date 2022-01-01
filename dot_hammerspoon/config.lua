@@ -5,11 +5,11 @@ local obj = {}
 function obj.reload()
     hs.notify.new(nil, {
         title = "Hammerspoon",
-        subTitle = "Configuration reloading!",
+        subTitle = "Reloading...",
         withdrawAfter = 2,
-        autoWithdraw = true
+        autoWithdraw = true,
     }):send()
-    hs.reload()
+    hs.timer.doAfter(2, hs.reload)
 end
 
 return obj
