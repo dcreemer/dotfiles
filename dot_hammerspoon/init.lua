@@ -34,9 +34,8 @@ browsers.init()
 local private = require("private")
 -- *not* local
 bear = require("Bear")
-bear.init(private.bearToken, private.bearJournalTemplateId,
-    function(date) return "Journal for " .. os.date("%b %d, %Y", date) end
-)
+-- bear.init(private.bearToken)
+bear.init() -- if not provided, it will be read from the configuration note.
 
 -- all other hotkeys
 local keymap = require("keymap")
