@@ -23,5 +23,10 @@ for the specifics.
 
 I've built a module to control Bear.app, and added the ability to create notes
 from templates, add backlinks to notes, and maintain a daily journal. See
-[here](https://github.com/dcreemer/dotfiles/blob/main/dot_hammerspoon/bearapp.lua)
-for my implementation of that.
+[here](https://github.com/dcreemer/hammerspoon-bear) for my implementation of
+that.
+
+## Key Bindings
+
+Global and application-specific key bindings are defined in
+[keymap.lua](https://github.com/dcreemer/dotfiles/blob/main/dot_hammerspoon/keymap.lua).
