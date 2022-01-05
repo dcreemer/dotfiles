@@ -4,6 +4,8 @@
 -- Handle various URLs in different browsers
 --
 
+local log = hs.logger.new("browsers", "info")
+
 dispatcher = require("URLDispatcher")
 
 obj = {}
