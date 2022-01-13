@@ -60,6 +60,7 @@ function obj.init()
         {"https?://.*webex%.com",                  Safari},
         {"https?://.*icloud%.com",                 Safari},
         {"https?://.*enterprise%.slack%.com",      Safari},
+        {"https?://.*inc%.newsweaver%.com/app",    Safari},
         {"https?://docs%.google%.com",        nil, chromeDefault},
         {"https?://.*tailscale%.com",         nil, chromeDefault},
         {"https?://.*live%.com",                   Edge},
