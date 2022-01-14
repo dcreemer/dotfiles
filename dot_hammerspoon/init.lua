@@ -37,14 +37,6 @@ bear = require("Bear")
 -- bear.init(private.bearToken)
 bear.init() -- if not provided, it will be read from the configuration note.
 
--- text expander
-local ht = require("expand")
-ht.keywords ={
-   [":sig"] = "regards,\n-- David",
-   [":tod"] = function() return os.date("%b %d, %Y") end,
-}
-ht:start()
-
 -- all other hotkeys
 local keymap = require("keymap")
 keymap.init()
