@@ -1044,7 +1044,8 @@
 
 ;; load private configuration when it exists
 ;; and also load other packages that depend on it
-(load (private-file "private.el") 'noerror)
+(when (file-exists-p (expand-file-name "personal/1pass" "~"))
+  (load (private-file "private.el") 'noerror))
 
 ;; -----------------------------------------------------------------------------
 ;; server
