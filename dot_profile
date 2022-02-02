@@ -16,13 +16,12 @@ fi
 export LANG="en_US.UTF-8"
 
 # set the PATH
-export PATH=$HOME/bin:$HOME/.local/bin
 if [ "$DIST" == "termux" ]; then
     # inside termux, need busybox and user
-    export PATH=$PATH:$PREFIX/bin:$PREFIX/bin/applets
+    export PATH=$PREFIX/bin:$PREFIX/bin/applets
     export USER=$(whoami)
 else
-    export PATH=$PATH:/usr/sbin:/usr/bin:/sbin:/bin
+    export PATH=/usr/sbin:/usr/bin:/sbin:/bin
     # reset HOMEBREW settings if set:
     unset HOMEBREW_PREFIX HOMEBREW_SHELLENV_PREFIX HOMEBREW_NO_ANALYTICS HOMEBREW_CELLAR HOMEBREW_REPOSITORY HOMEBREW_GITHUB_API_TOKEN
     if [ -x "/usr/local/bin/brew" ]; then
@@ -36,6 +35,7 @@ else
         fi
     fi
 fi
+export PATH=$HOME/.local/bin:${PATH}
 
 # fn to start ssh-agent, but never inside of a tmux session
 start_ssh_agent() {
