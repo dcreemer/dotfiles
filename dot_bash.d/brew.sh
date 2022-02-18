@@ -6,8 +6,8 @@
 if command -v brew > /dev/null; then
 
     # bash completion via homebrew
-    COMP="$(brew --prefix)"/etc/bash_completion
-    if [ -f "${COMP}" ]; then
+    COMP="$(brew --prefix)"/etc/profile.d/bash_completion.sh
+    if [ -r "${COMP}" ]; then
         # shellcheck source=/dev/null
         . "${COMP}"
     fi
