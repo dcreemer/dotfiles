@@ -53,7 +53,7 @@ end
 function obj.init()
     dispatcher.url_patterns = {
         {"https?://zoom%.us/j/",                   Zoom},
-        {"https?://%w+%.zoom%.us/j/",              Zoo},
+        {"https?://%w+%.zoom%.us/j/",              Zoom},
         {"https://quip[%a%-]+%.com/",         nil, quip},
         {"https?://.*box%.com",                    Safari},
         {"https?://.*apple%.com",                  Safari},
@@ -61,6 +61,7 @@ function obj.init()
         {"https?://.*icloud%.com",                 Safari},
         {"https?://.*enterprise%.slack%.com",      Safari},
         {"https?://.*inc%.newsweaver%.com/app",    Safari},
+        {"https?://.*coderpad%.io",                Safari},
         {"https?://docs%.google%.com",        nil, chromeDefault},
         {"https?://.*tailscale%.com",         nil, chromeDefault},
         {"https?://.*live%.com",                   Edge},
@@ -72,4 +73,3 @@ function obj.init()
 end
 
 return obj
-
