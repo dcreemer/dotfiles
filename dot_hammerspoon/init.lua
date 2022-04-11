@@ -41,4 +41,14 @@ bear.init() -- if not provided, it will be read from the configuration note.
 local keymap = require("keymap")
 keymap.init()
 
+-- testing
+local function _callbackHandler(eventName, params)
+   if params.cmd == "testing" then
+      log.i("got testing event.")
+    end
+end
+
+local urlevent = require("hs.urlevent")
+urlevent.bind("streamdeck", _callbackHandler)
+
 log.i('Initialization complete')
