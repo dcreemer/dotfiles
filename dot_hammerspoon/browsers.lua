@@ -59,7 +59,7 @@ function obj.init()
         {"https?://.*apple%.com",                  Safari},
         {"https?://.*webex%.com",                  Safari},
         {"https?://.*icloud%.com",                 Safari},
-        {"https?://.*enterprise%.slack%.com",      Safari},
+        {"https?://.*slack%.com",                  Safari},
         {"https?://.*inc%.newsweaver%.com/app",    Safari},
         {"https?://.*coderpad%.io",                Safari},
         {"https?://docs%.google%.com",        nil, chromeDefault},
