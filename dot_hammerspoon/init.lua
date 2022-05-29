@@ -30,6 +30,10 @@ windows.init()
 local browsers = require("browsers")
 browsers.init()
 
+-- browser url dispatcher
+local expander = require("expander")
+expander.init()
+
 -- Bear Functions
 local private = require("private")
 -- *not* local
