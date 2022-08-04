@@ -10,10 +10,11 @@ local obj = {}
 obj.__index = obj
 
 obj.keywords = {
-  [":test"] = "TESTING",
-  [":sig"] = "regards,\n-- David",
-  [":btod"] =  function() return "### " .. os.date("%B %d, %Y") end,
-  [":tod"] =  function() return os.date("%B %d, %Y") end,
+  ["^sig"] = "regards,\n-- David",
+  ["^bl"] = "---\n## Backlinks\n---",
+  ["^btod"] =  function() return "### " .. os.date("%B %d, %Y") end,
+  ["^tod"] =  function() return os.date("%B %d, %Y") end,
+  ["^iso"] =  function() return os.date("%Y-%m-%d") end,
 }
 
 obj.word = ""
