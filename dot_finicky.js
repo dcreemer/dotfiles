@@ -18,6 +18,10 @@ module.exports = {
         browser: "Safari"
       },
       {
+        match: /^https?:\/\/.*applesurveys\.com\/.*$/,
+        browser: "Safari"
+      },
+      {
         match: /^https?:\/\/.*box\.com\/.*$/,
         browser: "Safari"
       },
