@@ -14,6 +14,10 @@ module.exports = {
         browser: "us.zoom.xos"
       },
       {
+        match: /^https?:\/\/quip\-a....\.com\/.*$/,
+        browser: ["com.quip.Desktop", "Safari" ]
+      },
+      {
         match: /^https?:\/\/.*apple\.com\/.*$/,
         browser: "Safari"
       },
@@ -48,10 +52,6 @@ module.exports = {
       {
         match: /^https?:\/\/.*inc\.newsweaver\.com\/app.*$/,
         browser: "Safari"
-      },
-      {
-        match: /^https?:\/\/quip\-a....\.com\/.*$/,
-        browser: ["com.quip.Desktop", "Safari" ]
       },
       {
         match: /^https?:\/\/.*\.live\.com\/.*$/,
