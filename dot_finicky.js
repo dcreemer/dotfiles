@@ -15,7 +15,7 @@ module.exports = {
       },
       {
         match: /^https?:\/\/quip\-a....\.com\/.*$/,
-        browser: ["com.quip.Desktop", "Safari" ]
+        browser: [ "Safari", "com.quip.Desktop" ]
       },
       {
         match: /^https?:\/\/.*apple\.com\/.*$/,
