@@ -2,3 +2,4 @@
 display_time = true
 cleanup = true
 skip_notify = true
+disable = ["vscode"]
