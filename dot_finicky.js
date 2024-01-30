@@ -54,6 +54,10 @@ module.exports = {
         browser: "Safari"
       },
       {
+        match: /^https?:\/\/.*workday\.com\/.*$/,
+        browser: "Safari"
+      },
+      {
         match: /^https?:\/\/.*\.live\.com\/.*$/,
         browser: "Microsoft Edge"
       },
