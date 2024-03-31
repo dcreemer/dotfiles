@@ -1,5 +1,5 @@
 module.exports = {
-    defaultBrowser: "Firefox",
+    defaultBrowser: "Safari",
     handlers: [
       {
         match: finicky.matchHostnames("docs.google.com"),
@@ -71,4 +71,3 @@ module.exports = {
       },
     ]
   }
-  
