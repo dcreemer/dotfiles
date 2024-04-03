@@ -1,4 +1,0 @@
-# only include private configs on home machines
-{{- if ne .location "home" }}
-private/
-{{- end }}
