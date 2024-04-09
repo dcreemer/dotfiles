@@ -3,10 +3,14 @@
 # python
 #
 
-if command -v pyenv 1>/dev/null 2>&1; then
-    # use pyenv to choose and switch python interpreters
-    export PYENV_ROOT="$HOME/.pyenv"
+# use pyenv to choose and switch python interpreters
+PYENV_ROOT="$HOME/.pyenv"
+if [ -d "$PYENV_ROOT" ]; then
+    export PYENV_ROOT
     export PATH="$PYENV_ROOT/bin:$PATH"
+fi
+
+if command -v pyenv 1>/dev/null 2>&1; then
     eval "$(pyenv init --path)"
     eval "$(pyenv init -)"
 fi
