@@ -16,7 +16,8 @@ if command -v brew > /dev/null; then
     # https://github.com/Homebrew/brew/blob/master/share/doc/homebrew/Analytics.md
     export HOMEBREW_NO_ANALYTICS=1
 
-    if command -v op > /dev/null; then
+    # if not on remote machine
+    if [ -z "$SSH_CLIENT" ] && command -v op > /dev/null; then
         # github personal access token
         # see https://github.com/settings/tokens
         export HOMEBREW_GITHUB_API_TOKEN=$(op item get "Github/homebrew-api-token" --fields label=password)
