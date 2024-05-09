@@ -1,26 +1,28 @@
 # shellcheck disable=SC2155,SC2039
 #
-# Homebrew (mac, linux)
+# Homebrew (mac, Linux)
 #
 
-if command -v brew > /dev/null; then
+# I wrap the brew command in a shell script elsewhere, I want to
+# determine the brew prefix without calling the executable ("brew
+# --prefix")
 
-    # bash completion via homebrew
-    COMP="$(brew --prefix)"/etc/profile.d/bash_completion.sh
-    if [ -r "${COMP}" ]; then
-        # shellcheck source=/dev/null
-        . "${COMP}"
+for b in /opt/homebrew /usr/local /home/linuxbrew/.linuxbrew; do
+    if command -v "$b"/bin/brew > /dev/null; then
+        BREW="$b"
+        break
     fi
+    # no brew on this system
+    exit 0
+done
 
-    # Turn off homebrew analytics
-    # https://github.com/Homebrew/brew/blob/master/share/doc/homebrew/Analytics.md
-    export HOMEBREW_NO_ANALYTICS=1
-
-    # if not on remote machine
-    if [ -z "$SSH_CLIENT" ] && command -v op > /dev/null; then
-        # github personal access token
-        # see https://github.com/settings/tokens
-        export HOMEBREW_GITHUB_API_TOKEN=$(op item get "Github/homebrew-api-token" --fields label=password)
-    fi
-
+# bash completion via Homebrew
+COMP="$BREW"/etc/profile.d/bash_completion.sh
+if [ -r "${COMP}" ]; then
+    # shellcheck source=/dev/null
+    . "${COMP}"
 fi
+
+# Turn off Homebrew analytics
+# https://github.com/Homebrew/brew/blob/master/share/doc/homebrew/Analytics.md
+export HOMEBREW_NO_ANALYTICS=1

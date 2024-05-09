@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+BREW=/opt/homebrew/bin/brew
+
+# if not on remote machine
+if [ -z "$SSH_CLIENT" ] && [ -z "$HOMEBREW_GITHUB_API_TOKEN" ] && command -v op > /dev/null; then
+    # github personal access token
+    # see https://github.com/settings/tokens
+    export HOMEBREW_GITHUB_API_TOKEN=$(op item get "Github/homebrew-api-token" --fields label=password)
+fi
+
+exec "$BREW" $*
