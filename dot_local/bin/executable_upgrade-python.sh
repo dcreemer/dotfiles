@@ -10,14 +10,13 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "Upgrade from $CURVERS to $NEWVERS ?"
-[[ "$(read -r -e -p 'Continue? [y/N]> '; echo $REPLY)" == [Yy]* ]] || exit 1
+[[ "$(read -r -e -p 'Continue? [y/N]> '; echo "$REPLY")" == [Yy]* ]] || exit 1
 
 set -e
 
 OPTS=""
 if [ $OS == "Darwin" ]; then
     OPTS="--enable-framework"
-    exit 1
 fi
 
 env PYTHON_CONFIGURE_OPTS="${OPTS}" pyenv install -v "$NEWVERS"
