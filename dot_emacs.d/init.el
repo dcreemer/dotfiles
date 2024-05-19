@@ -32,7 +32,7 @@
 
 ;; Mac OS X Emacs.app needs a bit of help getting shell variables
 (use-package exec-path-from-shell
-  :if *is-mac-gui*
+  :if (display-graphic-p)
   :ensure t
   :init
   (setq exec-path-from-shell-check-startup-files nil)
