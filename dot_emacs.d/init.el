@@ -142,9 +142,7 @@
   :ensure t
   :diminish which-key-mode
   :config
-  (which-key-mode)
-  ; (which-key-setup-side-window-right)
-  )
+  (which-key-mode))
 
 ;; configure a nicer modeline...
 (use-package doom-modeline
@@ -157,11 +155,18 @@
 
 ;; whitespace
 (use-package whitespace
-  :hook (prog-mode . whitespace-mode)
+  :ensure t
+  :defer t
   :diminish whitespace-mode
+  :hook (prog-mode . whitespace-mode)
   :config
   (setq whitespace-line-column 99)
   (setq whitespace-style '(face empty lines-tail trailing)))
+
+;; colorize parents
+(use-package rainbow-delimiters
+  :ensure t
+  :hook (prog-mode . rainbow-delimiters-mode))
 
 ;; like join from vim.
 (defun dc/join-forward ()
@@ -200,9 +205,11 @@
     (setq-default projectile-generic-command "rg --files --hidden -0"))
   (projectile-mode +1))
 
-;; line numbers
-(add-hook 'prog-mode-hook #'display-line-numbers-mode)
-(add-hook 'prog-mode-hook #'electric-pair-mode)
+;; line numbers & delimiters
+(use-package prog-mode
+  :ensure nil
+  :hook ((prog-mode . display-line-numbers-mode)
+         (prog-mode . electric-pair-mode)))
 
 ;; company for completion
 (use-package company
@@ -222,6 +229,7 @@
 ;; markdown
 (use-package markdown-mode
   :ensure t
+  :defer t
   :mode ("\\.md\\'" "\\.markdown\\'")
   :config
   :hook ((markdown-mode . display-fill-column-indicator-mode)
@@ -229,18 +237,37 @@
 
 (use-package rust-mode
   :ensure t
-  :hook (rust-mode . eglot-ensure)
-  :hook (rust-ts-mode . eglot-ensure)
-  :hook (rust-mode . cargo-minor-mode)
-  :hook (rust-ts-mode . cargo-minor-mode)
+  :defer t
+  :hook ((rust-mode    . eglot-ensure)
+         (rust-ts-mode . eglot-ensure)
+         (rust-mode    . cargo-minor-mode)
+         (rust-ts-mode . cargo-minor-mode))
   :config
   (use-package cargo
     :ensure t))
 
 (use-package python
   :ensure t
-  :hook (python-mode . eglot-ensure)
-  :hook (python-ts-mode . eglot-ensure))
+  :defer t
+  :hook ((python-mode    . eglot-ensure)
+         (python-ts-mode . eglot-ensure)))
+
+(use-package ruff-format
+  :ensure t
+  :defer t
+  :hook ((python-mode    . ruff-format-on-save-mode)
+         (python-ts-mode . ruff-format-on-save-mode)))
+
+(use-package clojure-mode
+  :ensure t
+  :defer t
+  :config
+  :hook ((clojure-mode    . aggressive-indent-mode)
+         (clojure-ts-mode . aggressive-indent-mode)))
+
+(use-package cider
+  :ensure t
+  :defer t)
 
 (provide 'init)
 
