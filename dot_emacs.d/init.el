@@ -249,14 +249,17 @@
 (use-package python
   :ensure t
   :defer t
-  :hook ((python-mode    . eglot-ensure)
-         (python-ts-mode . eglot-ensure)))
+  :hook (python-base-mode . eglot-ensure))
 
 (use-package ruff-format
   :ensure t
   :defer t
-  :hook ((python-mode    . ruff-format-on-save-mode)
-         (python-ts-mode . ruff-format-on-save-mode)))
+  :hook (python-base-mode . ruff-format-on-save-mode))
+
+(use-package pet
+  :ensure t
+  :config
+  (add-hook 'python-base-mode-hook 'pet-mode -10))
 
 (use-package clojure-mode
   :ensure t
