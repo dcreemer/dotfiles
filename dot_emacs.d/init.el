@@ -223,7 +223,8 @@
   :custom
   (treesit-auto-install 'prompt)
   :config
-  (treesit-auto-add-to-auto-mode-alist 'all)
+  (treesit-auto-add-to-auto-mode-alist '(python clojure))
+  (delete 'rust treesit-auto-langs) ;; missing some features
   (global-treesit-auto-mode))
 
 ;; markdown
@@ -239,10 +240,9 @@
   :ensure t
   :defer t
   :hook ((rust-mode    . eglot-ensure)
-         (rust-ts-mode . eglot-ensure)
-         (rust-mode    . cargo-minor-mode)
-         (rust-ts-mode . cargo-minor-mode))
+         (rust-mode    . cargo-minor-mode))
   :config
+  (setq rust-format-on-save t)
   (use-package cargo
     :ensure t))
 
