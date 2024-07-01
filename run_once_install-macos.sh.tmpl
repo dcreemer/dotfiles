@@ -11,10 +11,10 @@ brew install wget
 brew install --cask appcleaner
 
 {{ if eq .profile "full" -}}
+brew install aspell
 brew install bat
 brew install expect
 brew install fzf
-brew install httpstat
 brew install jq
 brew install pyenv
 brew install ripgrep
@@ -22,18 +22,18 @@ brew install shellcheck
 brew install topgrade
 brew install tree
 
-brew install --cask firefox
-brew install --cask google-chrome
-# brew install --cask hammerspoon
 brew install --cask soundsource
-brew install --cask visual-studio-code
-
-brew tap homebrew/cask-fonts
+brew install --cask 1password-cli
+brew install --cask finicky
+brew install --cask stay
 brew install --cask font-bitstream-vera
 
 {{ if eq .location "home" -}}
+brew install --cask firefox
+brew install --cask google-chrome
 brew install rustup-init
 brew install rust-analyzer
+brew install --cask visual-studio-code
 
 brew install --cask calibre
 brew install --cask zoom
