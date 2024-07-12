@@ -134,6 +134,11 @@
   :ensure t
   :bind ("M-j" . ace-jump-mode))
 
+;; expand region
+(use-package expand-region
+  :ensure t
+  :bind ("C-=" . er/expand-region))
+
 ;; y or n instead of yes or no
 (defalias 'yes-or-no-p 'y-or-n-p)
 
@@ -163,12 +168,12 @@
   (setq whitespace-line-column 99)
   (setq whitespace-style '(face empty lines-tail trailing)))
 
-;; colorize parents
+;; colorize parens
 (use-package rainbow-delimiters
   :ensure t
   :hook (prog-mode . rainbow-delimiters-mode))
 
-;; like join from vim.
+;; like join from vim
 (defun dc/join-forward ()
   "Join the next line to the current one."
   (interactive)
@@ -178,6 +183,18 @@
 
 ;; make the cursor more visible:
 (global-hl-line-mode)
+
+;; undo tree visualizer
+(use-package vundo
+  :ensure t
+  :bind ("M-_" . vundo))
+
+;; return to same point in a buffer when revisiting the file:
+(use-package saveplace
+  :ensure t
+  :config
+  (setq save-place-file (state-file "places"))
+  (save-place-mode t))
 
 ;; -----------------------------------------------------------------------------
 ;; Basic Utilities
