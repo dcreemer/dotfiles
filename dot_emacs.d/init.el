@@ -80,10 +80,10 @@
   :ensure t)
 
 ;; set the color theme to something nice on startup
-(use-package vscode-dark-plus-theme
+(use-package modus-themes
   :ensure t
   :config
-  (load-theme 'vscode-dark-plus t))
+  (load-theme 'modus-vivendi-deuteranopia :no-confirm))
 
 ;; fill column is about 1/2 full screen w/with two side-by-side windows on my mac
 (setq-default fill-column 90)
@@ -134,11 +134,6 @@
   :ensure t
   :bind ("M-j" . ace-jump-mode))
 
-;; expand region
-(use-package expand-region
-  :ensure t
-  :bind ("C-=" . er/expand-region))
-
 ;; y or n instead of yes or no
 (defalias 'yes-or-no-p 'y-or-n-p)
 
@@ -161,19 +156,18 @@
 ;; whitespace
 (use-package whitespace
   :ensure t
-  :defer t
   :diminish whitespace-mode
   :hook (prog-mode . whitespace-mode)
   :config
   (setq whitespace-line-column 99)
   (setq whitespace-style '(face empty lines-tail trailing)))
 
-;; colorize parens
+;; colorize parents
 (use-package rainbow-delimiters
   :ensure t
   :hook (prog-mode . rainbow-delimiters-mode))
 
-;; like join from vim
+;; like join from vim.
 (defun dc/join-forward ()
   "Join the next line to the current one."
   (interactive)
@@ -184,17 +178,24 @@
 ;; make the cursor more visible:
 (global-hl-line-mode)
 
-;; undo tree visualizer
+;; undo tree
 (use-package vundo
   :ensure t
   :bind ("M-_" . vundo))
 
-;; return to same point in a buffer when revisiting the file:
-(use-package saveplace
-  :ensure t
+;; Revert Dired and other buffers
+(customize-set-variable 'global-auto-revert-non-file-buffers t)
+
+;; Revert buffers when the underlying file has changed
+(global-auto-revert-mode 1)
+
+(use-package ibuffer
+  :bind ("C-x C-b" . #'ibuffer-list-buffers)
   :config
-  (setq save-place-file (state-file "places"))
-  (save-place-mode t))
+  ;; turn off forward and backward movement cycling
+  (customize-set-variable 'ibuffer-movement-cycle nil)
+  ;; the number of hours before a buffer is considered "old" by ibuffer.
+  (customize-set-variable 'ibuffer-old-time 24))
 
 ;; -----------------------------------------------------------------------------
 ;; Basic Utilities
@@ -243,6 +244,15 @@
   (treesit-auto-add-to-auto-mode-alist '(python clojure))
   (delete 'rust treesit-auto-langs) ;; missing some features
   (global-treesit-auto-mode))
+
+(use-package gptel
+  :ensure t
+  :bind ("C-c RET" . gptel-send)
+  :config
+  (gptel-make-ollama "Ollama"
+    :host "localhost:11434"
+    :stream t
+    :models '("codestral:latest" "llama3:latest")))
 
 ;; markdown
 (use-package markdown-mode
