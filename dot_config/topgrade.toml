@@ -2,4 +2,4 @@
 display_time = true
 cleanup = true
 skip_notify = true
-disable = ["containers", "vscode", "pip"]
+disable = ["containers", "vscode", "pip3"]
