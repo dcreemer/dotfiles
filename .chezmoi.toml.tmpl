@@ -1,6 +1,8 @@
 {{- $email := promptString "email" -}}
 {{- $location := promptString "location? (home|work|other)" "home" -}}
 {{- $profile := promptString "profile? (basic|full)" "basic" -}}
+encryption = "gpg"
+
 [data]
     email = "{{ $email }}"
     location = "{{ $location }}"
@@ -9,7 +11,6 @@
 [secret]
     command = "1pass"
 
-encryption = "gpg"
 [gpg]
     args = ["-q"]
     recipient = "{{ $email }}"
