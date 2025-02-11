@@ -242,15 +242,6 @@
   (delete 'rust treesit-auto-langs) ;; missing some features
   (global-treesit-auto-mode))
 
-(use-package gptel
-  :ensure t
-  :bind ("C-c RET" . gptel-send)
-  :config
-  (gptel-make-ollama "Ollama"
-    :host "localhost:11434"
-    :stream t
-    :models '("codestral:latest" "llama3:latest")))
-
 ;; markdown
 (use-package markdown-mode
   :ensure t
