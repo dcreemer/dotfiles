@@ -287,6 +287,18 @@
   :ensure t
   :defer t)
 
+
+(use-package gptel
+  :ensure t
+  :defer t
+  :config
+  (setq
+   gptel-model 'deepseek-r1:latest
+   gptel-backend (gptel-make-ollama "Ollama"
+                   :host "localhost:11434"
+                   :stream t
+                   :models '(deepseek-r1:latest qwen2.5-coder:latest))))
+
 (provide 'init)
 
 ;;; init.el ends here
