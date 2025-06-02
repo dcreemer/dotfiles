@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     defaultBrowser: "Safari",
     handlers: [
       {
@@ -15,7 +15,7 @@ module.exports = {
       },
       {
         match: /^https?:\/\/quip\-a....\.com\/.*$/,
-        browser: [ "Safari", "com.quip.Desktop" ]
+        browser: "Safari",
       },
       {
         match: /^https?:\/\/.*apple\.com\/.*$/,
