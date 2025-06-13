@@ -2,4 +2,4 @@
 display_time = true
 cleanup = true
 skip_notify = true
-disable = ["containers", "pip3", "uv"]
+disable = ["containers", "pip3"]
