@@ -3,8 +3,8 @@
 # rust:
 #
 
-cargobin="$HOME/.cargo/bin"
-
-if [ -e "${cargobin}" ]; then
-    export PATH="$HOME/.cargo/bin:$PATH"
-fi
+for b in ${HOME}/.cargo/bin /opt/homebrew/opt/rustup/bin; do
+    if [ -e "${b}" ]; then
+        export PATH="${b}:$PATH"
+    fi
+done
