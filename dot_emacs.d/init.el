@@ -287,17 +287,20 @@
   :ensure t
   :defer t)
 
-
 (use-package gptel
   :ensure t
   :defer t
   :config
-  (setq
-   gptel-model 'deepseek-r1:latest
-   gptel-backend (gptel-make-ollama "Ollama"
-                   :host "localhost:11434"
-                   :stream t
-                   :models '(deepseek-r1:latest qwen2.5-coder:latest))))
+  (setq gptel-model 'aws:anthropic.claude-sonnet-4-20250514-v1:0
+        gptel-backend (gptel-make-ollama "GenAI-Bridge"
+                        :host "localhost:11211"
+                        :stream t
+                        :models '(aws:anthropic.claude-3-5-haiku-20241022-v1:0
+                                  aws:anthropic.claude-sonnet-4-20250514-v1:0
+                                  aws:anthropic.claude-opus-4-20250514-v1:0))))
+
+;; start the emacs server
+(server-start)
 
 (provide 'init)
 

@@ -13,7 +13,7 @@ case "$TERM" in
         color_prompt=yes
         set_title=yes
         ;;
-    eterm-color*)
+    eterm-color*|eat-truecolor)
         color_prompt=yes
         # emacs Term mode behaves much like xterm
         export TERM=xterm
