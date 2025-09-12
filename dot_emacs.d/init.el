@@ -235,6 +235,11 @@
   :init
   (global-company-mode))
 
+;; envrc for loading project-specific settings
+(use-package envrc
+  :ensure t
+  :hook (after-init . envrc-global-mode))
+
 ;; tree-sitter for all languages available
 (use-package treesit-auto
   :ensure t

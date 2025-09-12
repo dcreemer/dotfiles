@@ -81,7 +81,7 @@ for f in ${HOME}/.bash.d/*; do
 done
 
 # direnv fixes everything! https://direnv.net
-command -v direnv && eval "$(direnv hook bash)"
+command -v direnv > /dev/null && eval "$(direnv hook bash)"
 
 # FZF completion
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
