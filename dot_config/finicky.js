@@ -1,5 +1,9 @@
 export default {
     defaultBrowser: "Safari",
+    options: {
+        // Hide the Finicky icon from the menu bar
+        hideIcon: true
+    },
     handlers: [
       {
         match: finicky.matchHostnames("docs.google.com"),
@@ -68,6 +72,17 @@ export default {
       {
         match: /^https?:\/\/.*\.bing\.com\/.*$/,
         browser: "Microsoft Edge"
+      },
+      {
+        // Open Apple Music links directly in Music.app
+        match: [
+          "music.apple.com*",
+          "geo.music.apple.com*",
+        ],
+        url: {
+          protocol: "itmss"
+        },
+        browser: "Music",
       },
     ]
   }
