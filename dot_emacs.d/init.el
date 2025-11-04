@@ -307,6 +307,11 @@
                                   aws:anthropic.claude-sonnet-4-20250514-v1:0
                                   aws:anthropic.claude-opus-4-20250514-v1:0))))
 
+;; lobsters
+(use-package lobsters
+  :ensure t
+  :defer t)
+
 ;; start the emacs server
 (server-start)
 
