@@ -32,7 +32,7 @@
 
 ;; Mac OS X Emacs.app needs a bit of help getting shell variables
 (use-package exec-path-from-shell
-  :if (display-graphic-p)
+  :if *is-a-mac*
   :ensure t
   :init
   (setq exec-path-from-shell-check-startup-files nil)
@@ -213,6 +213,10 @@
 ;; Programming Mode Configuration
 ;; -----------------------------------------------------------------------------
 
+(use-package rg
+  :ensure t
+  :config (rg-enable-default-bindings))
+
 (use-package projectile
   :ensure t
   :bind-keymap ("C-c p" . projectile-command-map)
@@ -294,6 +298,26 @@
 (use-package cider
   :ensure t
   :defer t)
+
+;; Janet
+
+;; https://stackoverflow.com/a/28008006
+(defun my-janet-mode-faces ()
+  "Customization of janet-ts-mode faces."
+  (face-remap-add-relative
+    ;; special forms in light blue
+    'font-lock-keyword-face 'font-lock-type-face))
+
+(use-package janet-mode
+  :ensure t
+  :config
+  (add-hook 'janet-mode-hook
+            'my-janet-mode-faces)
+  (add-hook 'janet-mode-hook
+            'rainbow-delimiters-mode))
+
+;; Dove:
+(add-to-list 'auto-mode-alist '("\\.dove\\'" . lisp-mode))
 
 (use-package gptel
   :ensure t
