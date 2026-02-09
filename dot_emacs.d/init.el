@@ -336,6 +336,19 @@
   :ensure t
   :defer t)
 
+;; Startup Dashboard
+(use-package dashboard
+  :ensure t
+  :config
+  (dashboard-setup-startup-hook)
+  (setq dashboard-startup-banner 'official)
+  (setq dashboard-items '((recents  . 5)
+                          (projects . 5)))
+  (setq dashboard-set-heading-icons t)
+  (setq dashboard-set-file-icons t)
+  (setq dashboard-center-content t)
+  (setq dashboard-show-shortcuts t))
+
 ;; start the emacs server
 (server-start)
 
