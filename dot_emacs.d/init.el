@@ -88,6 +88,10 @@
 ;; fill column is about 1/2 full screen w/with two side-by-side windows on my mac
 (setq-default fill-column 90)
 
+(use-package unfill
+  :ensure t
+  :bind ("M-q" . unfill-toggle))
+
 ;; always show column numbers
 (setq-default column-number-mode t)
 
@@ -299,37 +303,25 @@
   :ensure t
   :defer t)
 
+(use-package just-mode
+  :ensure t
+  :defer t)
+
 ;; Janet
-
-;; https://stackoverflow.com/a/28008006
-(defun my-janet-mode-faces ()
-  "Customization of janet-ts-mode faces."
-  (face-remap-add-relative
-    ;; special forms in light blue
-    'font-lock-keyword-face 'font-lock-type-face))
-
 (use-package janet-mode
   :ensure t
   :config
   (add-hook 'janet-mode-hook
-            'my-janet-mode-faces)
-  (add-hook 'janet-mode-hook
             'rainbow-delimiters-mode))
 
 ;; Dove:
-(add-to-list 'auto-mode-alist '("\\.dove\\'" . lisp-mode))
+(define-derived-mode dove-mode lisp-mode "Dove"
+  "Major mode for editing Dove files.")
+(add-to-list 'auto-mode-alist '("\\.dove\\'" . dove-mode))
 
-(use-package gptel
-  :ensure t
-  :defer t
-  :config
-  (setq gptel-model 'aws:anthropic.claude-sonnet-4-20250514-v1:0
-        gptel-backend (gptel-make-ollama "GenAI-Bridge"
-                        :host "localhost:11211"
-                        :stream t
-                        :models '(aws:anthropic.claude-3-5-haiku-20241022-v1:0
-                                  aws:anthropic.claude-sonnet-4-20250514-v1:0
-                                  aws:anthropic.claude-opus-4-20250514-v1:0))))
+(let ((pm "~/personal/pona/extras/pona-mode.el"))
+  (when (file-exists-p pm)
+    (load-file pm)))
 
 ;; lobsters
 (use-package lobsters
