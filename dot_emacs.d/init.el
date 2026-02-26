@@ -42,6 +42,14 @@
     (add-to-list 'exec-path-from-shell-variables var))
   (exec-path-from-shell-initialize))
 
+;; turn on menu (for GUIs only), turn off tool-bar, scroll-bar
+(if (display-graphic-p)
+    (progn
+      (menu-bar-mode 1)
+      (tool-bar-mode -1)
+      (scroll-bar-mode -1))
+  (menu-bar-mode -1))
+
 ;; in terminals, enable basic mouse support
 (unless (display-graphic-p)
   (xterm-mouse-mode 1))
