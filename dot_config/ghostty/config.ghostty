@@ -1,0 +1,14 @@
+theme = "Builtin Light"
+font-family = "SF Mono Terminal Regular"
+font-thicken = true
+font-thicken-strength = 2
+# font-feature = -calt
+# font-feature = -liga
+# font-feature = -dlig
+font-size = 13
+command = /opt/homebrew/bin/bash -l
+minimum-contrast = 2.1
+cursor-style = block
+cursor-style-blink = false
+shell-integration-features = no-cursor,sudo,title,ssh-env,ssh-terminfo,path
+window-padding-x = 10
