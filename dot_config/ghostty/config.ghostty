@@ -1,7 +1,7 @@
 theme = "Builtin Light"
 font-family = "SF Mono Terminal Regular"
 font-thicken = true
-font-thicken-strength = 2
+font-thicken-strength = 20
 # font-feature = -calt
 # font-feature = -liga
 # font-feature = -dlig
@@ -12,3 +12,4 @@ cursor-style = block
 cursor-style-blink = false
 shell-integration-features = no-cursor,sudo,title,ssh-env,ssh-terminfo,path
 window-padding-x = 10
+background = FCF4A7
