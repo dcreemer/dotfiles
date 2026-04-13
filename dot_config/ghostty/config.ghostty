@@ -1,4 +1,5 @@
-theme = "Builtin Light"
+# theme = "Builtin Light"
+theme = "Modus Vivendi"
 font-family = "SF Mono Terminal Regular"
 font-thicken = true
 font-thicken-strength = 20
@@ -12,4 +13,4 @@ cursor-style = block
 cursor-style-blink = false
 shell-integration-features = no-cursor,sudo,title,ssh-env,ssh-terminfo,path
 window-padding-x = 10
-background = FCF4A7
+# background = FCF4A7
