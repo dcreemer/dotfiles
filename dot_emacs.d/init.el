@@ -209,7 +209,8 @@
   ;; the number of hours before a buffer is considered "old" by ibuffer.
   (customize-set-variable 'ibuffer-old-time 24))
 
-(use-package eat
+;; Use ghostty lib for terminals
+(use-package ghostel
   :ensure t)
 
 ;; -----------------------------------------------------------------------------
