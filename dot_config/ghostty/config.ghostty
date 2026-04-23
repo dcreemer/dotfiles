@@ -14,3 +14,7 @@ cursor-style-blink = false
 shell-integration-features = no-cursor,sudo,title,ssh-env,ssh-terminfo,path
 window-padding-x = 10
 # background = FCF4A7
+keybind = page_up=scroll_page_up
+keybind = page_down=scroll_page_down
+keybind = home=scroll_to_top
+keybind = end=scroll_to_bottom
