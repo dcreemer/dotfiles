@@ -211,7 +211,8 @@
 
 ;; Use ghostty lib for terminals
 (use-package ghostel
-  :vc (:url "https://github.com/dakra/ghostel" :rev :newest))
+  :ensure t
+  :bind ("M-$" . ghostel))
 
 ;; -----------------------------------------------------------------------------
 ;; Basic Utilities
