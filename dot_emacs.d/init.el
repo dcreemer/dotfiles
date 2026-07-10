@@ -211,8 +211,26 @@
 
 ;; Use ghostty lib for terminals
 (use-package ghostel
-  :ensure t
-  :bind ("M-$" . ghostel))
+  :ensure t)
+
+(defun rlr/ghostel-buffer ()
+  "Return the active ghostel buffer, or nil if none exists."
+  (seq-find (lambda (buf)
+              (string-match-p "\\*ghostel:" (buffer-name buf)))
+            (buffer-list)))
+
+(defun rlr/ghostel-toggle ()
+  (interactive)
+  (let ((buf (rlr/ghostel-buffer)))
+    (cond
+     ((not buf)
+      (ghostel))
+     ((eq (current-buffer) buf)
+      (bury-buffer))
+     (t
+      (switch-to-buffer buf)))))
+
+(bind-key* "M-$" 'rlr/ghostel-toggle)
 
 ;; -----------------------------------------------------------------------------
 ;; Basic Utilities
@@ -302,16 +320,16 @@
   :config
   (add-hook 'python-base-mode-hook 'pet-mode -10))
 
-(use-package clojure-mode
-  :ensure t
-  :defer t
-  :config
-  :hook ((clojure-mode    . aggressive-indent-mode)
-         (clojure-ts-mode . aggressive-indent-mode)))
-
-(use-package cider
-  :ensure t
-  :defer t)
+;; (use-package clojure-mode
+;;   :ensure t
+;;   :defer t
+;;   :config
+;;   :hook ((clojure-mode    . aggressive-indent-mode)
+;;          (clojure-ts-mode . aggressive-indent-mode)))
+;; 
+;; (use-package cider
+;;   :ensure t
+;;   :defer t)
 
 (use-package just-mode
   :ensure t
@@ -325,18 +343,13 @@
             'rainbow-delimiters-mode))
 
 ;; Dove:
-(define-derived-mode dove-mode lisp-mode "Dove"
-  "Major mode for editing Dove files.")
-(add-to-list 'auto-mode-alist '("\\.dove\\'" . dove-mode))
+;; (define-derived-mode dove-mode lisp-mode "Dove"
+;;   "Major mode for editing Dove files.")
+;; (add-to-list 'auto-mode-alist '("\\.dove\\'" . dove-mode))
 
-(let ((pm "~/personal/pona/extras/pona-mode.el"))
-  (when (file-exists-p pm)
-    (load-file pm)))
-
-;; lobsters
-(use-package lobsters
-  :ensure t
-  :defer t)
+;; (let ((pm "~/personal/pona/extras/pona-mode.el"))
+;;  (when (file-exists-p pm)
+;;     (load-file pm)))
 
 ;; Startup Dashboard
 (use-package dashboard
