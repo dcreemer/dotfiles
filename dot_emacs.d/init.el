@@ -1,4 +1,6 @@
-;;; init.el -- dcreemer's emacs file
+;;; -*- lexical-binding: t -*-
+;;
+;; init.el -- dcreemer's emacs file
 ;;
 ;;; Commentary:
 ;; see README.md for info and credits
@@ -9,16 +11,12 @@
 ;; bootstrap the package system
 ;; -----------------------------------------------------------------------------
 
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-
 ;; Add MELPA to end of archives list
+(package-initialize)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 
 ;; bootup package system
 (setq package-native-compile t)
-(package-initialize)
 
 (eval-when-compile
   (require 'use-package))
