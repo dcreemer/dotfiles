@@ -1,13 +1,24 @@
 {{ if eq .chezmoi.os "linux" -}}
 
 #!/bin/sh
-sudo apt install build-essential
-sudo apt install gnupg
+{{ if eq .chezmoi.osRelease.idLike "arch" -}}
+sudo pacman -S base-devel
+sudo pacman -S bash-completion
+sudo pacman -S emacs-nox
+sudo pacman -S gnupg
+sudo pacman -S htop
+sudo pacman -S man-db manpages
+sudo pacman -S ripgrep
+sudo pacman -S tmux
+{{ end -}}
 
-{{ if eq .profile "full" -}}
+{{ if eq .chezmoi.osRelease.idLike "debian" -}}
+sudo apt install build-essential
+sudo apt install emacs-nox
+sudo apt install gnupg
+sudo apt install htop
 sudo apt install ripgrep
-# for 1pass
-sudo apt install expect jq xclip
+sudo apt install tmux
 {{ end -}}
 
 {{ end -}}

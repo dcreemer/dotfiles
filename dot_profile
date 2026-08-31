@@ -9,7 +9,7 @@ if [ "$OS" == "Linux" ]; then
     if [ "$ANDROID_ROOT" != "" ]; then
         export DIST="termux"
     elif [ -r /etc/os-release ]; then
-        export DIST=$(grep -e '^NAME=' /etc/os-release |sed -r 's/NAME="([a-zA-Z ]+)"/\1/')
+        export DIST=$(grep -e '^NAME=' /etc/os-release |sed -r 's/NAME="([a-zA-Z]+).*"/\1/')
     fi
 fi
 
