@@ -3,7 +3,7 @@
 # Arch Linux specific
 #
 
-if [ "$DIST" == "arch" ]; then
+if [ "$DIST" == "Arch" ]; then
 
     # start ssh-agent if needed
     start_ssh_agent
