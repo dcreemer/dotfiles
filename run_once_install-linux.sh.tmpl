@@ -12,7 +12,7 @@ sudo pacman -S ripgrep
 sudo pacman -S tmux
 {{ end -}}
 
-{{ if eq .chezmoi.osRelease.idLike "debian" -}}
+{{ if eq .chezmoi.osRelease.id "debian" -}}
 sudo apt install build-essential
 sudo apt install emacs-nox
 sudo apt install gnupg
