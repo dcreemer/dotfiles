@@ -1,7 +1,7 @@
 {{ if eq .chezmoi.os "linux" -}}
 
 #!/bin/sh
-{{ if eq .chezmoi.osRelease.idLike "arch" -}}
+{{ if eq .chezmoi.osRelease.id "arch" -}}
 sudo pacman -S base-devel
 sudo pacman -S bash-completion
 sudo pacman -S emacs-nox
