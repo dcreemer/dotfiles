@@ -45,7 +45,11 @@
     (progn
       (menu-bar-mode 1)
       (tool-bar-mode -1)
-      (scroll-bar-mode -1))
+      (scroll-bar-mode -1)
+      (add-to-list 'default-frame-alist '(left . 50))
+      (add-to-list 'default-frame-alist '(top . 50))
+      (add-to-list 'default-frame-alist '(width . 120))   ;; columns
+      (add-to-list 'default-frame-alist '(height . 54)))   ;; rows
   (menu-bar-mode -1))
 
 ;; in terminals, enable basic mouse support
