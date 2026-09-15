@@ -1,0 +1,50 @@
+{{- if eq .chezmoi.os "android" -}}
+{{-     $prefix := env "PREFIX" -}}
+{{-     if not (hasPrefix "/" $prefix) -}}
+{{-         fail "Run the Android installer inside Termux with an absolute PREFIX" -}}
+{{-     end -}}
+#!{{ $prefix }}/bin/sh
+set -eu
+
+# Packages
+
+prefix={{ $prefix | shellQuote }}
+[ -x "$prefix/bin/pkg" ]
+export PATH="$prefix/bin:${PATH:-}"
+# Termux is rolling-release: update before adding packages.
+pkg upgrade -y
+pkg install -y \
+    bash \
+    bash-completion \
+    git \
+    gnupg \
+    tmux \
+    ripgrep \
+    direnv \
+    bat \
+    htop \
+    emacs \
+    openssh
+
+# Login shell
+
+bash_path="$prefix/bin/bash"
+# shellcheck disable=SC2016
+"$bash_path" --noprofile --norc -c 'test "${BASH_VERSINFO[0]}" -ge 5'
+# An absent override means Termux defaults to Bash.
+if [ -e "$HOME/.termux/shell" ] || [ -L "$HOME/.termux/shell" ]; then
+    if [ "$(readlink -f "$HOME/.termux/shell")" != "$bash_path" ]; then
+        chsh -s bash
+    fi
+    [ "$(readlink -f "$HOME/.termux/shell")" = "$bash_path" ]
+fi
+
+# UTF-8 locale
+
+# Termux has no locale utility; check UTF-8 character handling directly.
+# shellcheck disable=SC2016
+LC_ALL=en_US.UTF-8 "$bash_path" --noprofile --norc -c '
+    text=$(printf "\303\251")
+    test "${#text}" -eq 1
+'
+{{ end -}}

@@ -1,41 +1,89 @@
-{{ if eq .chezmoi.os "darwin" -}}
-
+{{- if eq .chezmoi.os "darwin" -}}
 #!/bin/sh
+set -eu
 
-brew install bash
-brew install bash-completion@2
-brew install git
-brew install gnupg
-brew install wget
-brew install --cask appcleaner
+# Homebrew
 
-{{ if eq .profile "full" -}}
-brew install bat
-brew install jq
-brew install ripgrep
-brew install shellcheck
-brew install topgrade
-brew install tree
+# Homebrew itself must be installed as the user, with sudo available to its installer.
+if [ ! -x /opt/homebrew/bin/brew ]; then
+    sudo -v
+    installer=$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)
+    NONINTERACTIVE=1 /bin/bash -c "$installer"
+fi
+brew_environment=$(/opt/homebrew/bin/brew shellenv sh)
+eval "$brew_environment"
+export HOMEBREW_NO_ANALYTICS=1
 
-brew install --cask soundsource
-brew install --cask finicky
-brew install --cask stay
-brew install --cask font-bitstream-vera
+# Common packages
 
-{{ if eq .location "home" -}}
-brew install --cask firefox
-brew install --cask google-chrome
-brew install rustup-init
-brew install rust-analyzer
-brew install --cask visual-studio-code
+brew install \
+    bash \
+    bash-completion@2 \
+    git \
+    gnupg \
+    tmux \
+    ripgrep \
+    direnv \
+    bat \
+    htop \
+    emacs \
+    wget
+brew install --cask \
+    appcleaner
+{{     if eq .profile "full" }}
 
-brew install --cask calibre
-brew install --cask zoom
-{{ end -}}
+# Full-profile extras
 
-{{ if eq .location "work" -}}
-{{ end -}}
+brew install \
+    jq \
+    shellcheck \
+    topgrade \
+    tree
+brew install --cask \
+    soundsource \
+    finicky \
+    stay \
+    font-bitstream-vera
+{{         if eq .location "home" }}
 
-{{ end -}}
+# Home-machine extras
 
+brew install \
+    rustup \
+    rust-analyzer
+brew install --cask \
+    firefox \
+    google-chrome \
+    visual-studio-code \
+    calibre \
+    zoom
+{{         end -}}
+{{     end }}
+# UTF-8 locale and SSH clients
+
+# macOS supplies this locale and the OpenSSH client tools.
+[ "$(LC_ALL=en_US.UTF-8 locale charmap)" = UTF-8 ]
+for tool in ssh ssh-add ssh-agent; do
+    command -v "$tool" >/dev/null
+done
+
+# Login shell
+
+bash_path=/opt/homebrew/bin/bash
+# shellcheck disable=SC2016
+"$bash_path" --noprofile --norc -c 'test "${BASH_VERSINFO[0]}" -ge 5'
+user_name=$(id -un)
+account_entry=$(dscl . -read "/Users/$user_name" UserShell)
+current_shell=$(printf '%s\n' "$account_entry" | awk '{print $2}')
+[ -n "$current_shell" ]
+if [ "$current_shell" != "$bash_path" ]; then
+    if ! grep -Fxq "$bash_path" /etc/shells; then
+        printf '%s\n' "$bash_path" | sudo tee -a /etc/shells >/dev/null
+    fi
+    sudo chsh -s "$bash_path" "$user_name"
+fi
+account_entry=$(dscl . -read "/Users/$user_name" UserShell)
+current_shell=$(printf '%s\n' "$account_entry" | awk '{print $2}')
+[ -n "$current_shell" ]
+[ "$current_shell" = "$bash_path" ]
 {{ end -}}

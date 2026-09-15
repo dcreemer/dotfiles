@@ -5,6 +5,40 @@ Linux, FreeBSD, and Termux.
 - Loads prompt and completion in interactive shells.
 - Makes tool paths, including macOS `bearcli`, available to login-shell automation.
 
+## Install
+
+Run as your normal user with `curl` and internet access. Linux and FreeBSD need
+working `sudo`; macOS needs an administrator account. On Android, run inside
+Termux. Supported systems are Apple Silicon macOS, Arch, Debian/Ubuntu and
+compatible derivatives, FreeBSD, and Termux.
+
+The example uses your local `$USER` as the GitHub username. Change
+`GITHUB_USERNAME` if the account containing your `dotfiles` repository differs.
+
+```sh
+GITHUB_USERNAME="$USER"
+sh -c "$(curl -fsLS https://get.chezmoi.io)" -- \
+  -b "$HOME/.local/bin" init --apply "$GITHUB_USERNAME"
+```
+
+This installs chezmoi in `~/.local/bin`, applies the dotfiles, installs common
+CLI tools, and selects Bash 5+ as your login shell. It asks for your email,
+profile (`basic`/`full`), location, and any required passwords. macOS installs
+Homebrew if needed and keeps the profile/location-specific extras.
+
+Arch and Termux perform a full package upgrade before installing tools.
+Installers run again when their contents change. Restart your sessions after
+installation: log out and back in (or reboot), and end old tmux servers.
+
+## Sync
+
+Edit the source with `chezmoi edit ~/.bashrc` (or edit this repository), review
+with `chezmoi diff`, then run `chezmoi apply`. Commit and push the source changes
+with Git. On other devices, run `chezmoi update` to pull and apply them.
+
+If you edited a destination file directly, capture it with `chezmoi add` or
+`chezmoi merge` before committing.
+
 ## Startup
 
 Bash login shells load `.bash_profile` → `.profile` → `.bashrc`.
@@ -27,7 +61,9 @@ an activated virtualenv's priority.
 
 History keeps 50,000 entries in memory and 100,000 on disk, skipping commands
 with a leading space and consecutive duplicates. Console prompts support color,
-and `ls`/`grep` use color when available. Existing locale settings are preserved.
+and `ls`/`grep` use color when available. Working UTF-8 locale settings are
+preserved; other settings get an available UTF-8 fallback. Linux generates a
+locale during installation if needed. Termux uses its UTF-8 default.
 
 ## SSH agent
 

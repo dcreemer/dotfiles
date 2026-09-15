@@ -1,0 +1,50 @@
+{{- if eq .chezmoi.os "freebsd" -}}
+#!/bin/sh
+set -eu
+
+# Packages
+
+if ! pkg -N >/dev/null 2>&1; then
+    sudo env ASSUME_ALWAYS_YES=yes pkg bootstrap
+fi
+sudo pkg update
+sudo pkg install -y \
+    bash \
+    bash-completion \
+    git \
+    gnupg \
+    tmux \
+    ripgrep \
+    direnv \
+    bat \
+    htop \
+    emacs-nox
+
+# UTF-8 locale and SSH clients
+
+# FreeBSD supplies these locales and OpenSSH client tools in the base system.
+[ "$(LC_ALL=en_US.UTF-8 locale charmap)" = UTF-8 ]
+for tool in ssh ssh-add ssh-agent; do
+    command -v "$tool" >/dev/null
+done
+
+# Login shell
+
+bash_path=/usr/local/bin/bash
+# shellcheck disable=SC2016
+"$bash_path" --noprofile --norc -c 'test "${BASH_VERSINFO[0]}" -ge 5'
+user_name=$(id -un)
+account_entry=$(getent passwd "$user_name")
+current_shell=$(printf '%s\n' "$account_entry" | cut -d: -f7)
+[ -n "$current_shell" ]
+if [ "$current_shell" != "$bash_path" ]; then
+    if ! grep -Fxq "$bash_path" /etc/shells; then
+        printf '%s\n' "$bash_path" | sudo tee -a /etc/shells >/dev/null
+    fi
+    chsh -s "$bash_path"
+fi
+account_entry=$(getent passwd "$user_name")
+current_shell=$(printf '%s\n' "$account_entry" | cut -d: -f7)
+[ -n "$current_shell" ]
+[ "$current_shell" = "$bash_path" ]
+{{ end -}}

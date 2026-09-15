@@ -1,24 +1,102 @@
-{{ if eq .chezmoi.os "linux" -}}
-
+{{- if eq .chezmoi.os "linux" -}}
+{{-     $release := get .chezmoi "osRelease" | default dict -}}
+{{-     $id := get $release "id" | default "" -}}
+{{-     $family := "" -}}
+{{-     if eq $id "arch" -}}
+{{-         $family = "arch" -}}
+{{-     else if or (eq $id "debian") (eq $id "ubuntu") -}}
+{{-         $family = "debian" -}}
+{{-     else -}}
+{{-         range (regexSplit "\\s+" (get $release "idLike" | default "") -1) -}}
+{{-             if eq $family "" -}}
+{{-                 if eq . "arch" -}}
+{{-                     $family = "arch" -}}
+{{-                 else if or (eq . "debian") (eq . "ubuntu") -}}
+{{-                     $family = "debian" -}}
+{{-                 end -}}
+{{-             end -}}
+{{-         end -}}
+{{-     end -}}
 #!/bin/sh
-{{ if eq .chezmoi.osRelease.id "arch" -}}
-sudo pacman -S base-devel
-sudo pacman -S bash-completion
-sudo pacman -S emacs-nox
-sudo pacman -S gnupg
-sudo pacman -S htop
-sudo pacman -S man-db man-pages
-sudo pacman -S ripgrep
-sudo pacman -S tmux
-{{ end -}}
+set -eu
 
-{{ if eq .chezmoi.osRelease.id "debian" -}}
-sudo apt install build-essential
-sudo apt install emacs-nox
-sudo apt install gnupg
-sudo apt install htop
-sudo apt install ripgrep
-sudo apt install tmux
-{{ end -}}
+# Packages
 
+{{     if eq $family "arch" -}}
+sudo pacman -Syu --needed --noconfirm \
+    bash \
+    bash-completion \
+    git \
+    gnupg \
+    tmux \
+    ripgrep \
+    direnv \
+    bat \
+    htop \
+    emacs-nox \
+    openssh \
+    base-devel \
+    man-db \
+    man-pages
+{{     else if eq $family "debian" -}}
+sudo apt-get update
+sudo apt-get install -y \
+    bash \
+    bash-completion \
+    git \
+    gnupg \
+    tmux \
+    ripgrep \
+    direnv \
+    bat \
+    htop \
+    emacs-nox \
+    openssh-client \
+    build-essential \
+    man-db \
+    manpages \
+    locales
+{{     else -}}
+printf '%s\n' 'Unsupported Linux distribution: install packages manually.' >&2
+exit 1
+{{     end }}
+{{     if ne $family "" -}}
+# UTF-8 locale
+
+# Keep a working locale; otherwise ensure a UTF-8 fallback is available.
+charmap=$(locale charmap 2>/dev/null) || charmap=
+if [ "$charmap" != UTF-8 ]; then
+    utf8_locale=C.UTF-8
+    charmap=$(LC_ALL="$utf8_locale" locale charmap 2>/dev/null) || charmap=
+    if [ "$charmap" != UTF-8 ]; then
+        utf8_locale=en_US.UTF-8
+        charmap=$(LC_ALL="$utf8_locale" locale charmap 2>/dev/null) || charmap=
+        if [ "$charmap" != UTF-8 ]; then
+            sudo localedef -i en_US -f UTF-8 en_US.UTF-8
+        fi
+    fi
+    [ "$(LC_ALL="$utf8_locale" locale charmap)" = UTF-8 ]
+fi
+
+# Login shell
+
+bash_path=/bin/bash
+# shellcheck disable=SC2016
+"$bash_path" --noprofile --norc -c 'test "${BASH_VERSINFO[0]}" -ge 5'
+user_name=$(id -un)
+account_entry=$(getent passwd "$user_name")
+current_shell=$(printf '%s\n' "$account_entry" | cut -d: -f7)
+[ -n "$current_shell" ]
+# /bin/bash and /usr/bin/bash may name the same executable.
+if [ "$(readlink -f "$current_shell")" != "$(readlink -f "$bash_path")" ]; then
+    if ! grep -Fxq "$bash_path" /etc/shells; then
+        printf '%s\n' "$bash_path" | sudo tee -a /etc/shells >/dev/null
+    fi
+    chsh -s "$bash_path"
+fi
+account_entry=$(getent passwd "$user_name")
+current_shell=$(printf '%s\n' "$account_entry" | cut -d: -f7)
+[ -n "$current_shell" ]
+[ "$(readlink -f "$current_shell")" = "$(readlink -f "$bash_path")" ]
+{{     end -}}
 {{ end -}}

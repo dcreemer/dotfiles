@@ -10,7 +10,36 @@ if [ "$OS" = Linux ]; then
 fi
 export OS DIST
 
-# Keep the inherited LANG and LC_* locale settings.
+# Preserve working UTF-8 settings; supply a fallback for C/unset/invalid locales.
+if [ "$DIST" = termux ]; then
+    # Termux supplies UTF-8 support but no locale utility.
+    case "${LC_ALL:-${LC_CTYPE:-${LANG:-}}}" in
+        *[uU][tT][fF]-8|*[uU][tT][fF]8) shell_locale= ;;
+        *) shell_locale=en_US.UTF-8 ;;
+    esac
+else
+    shell_locale=
+    charmap=$(locale charmap 2>/dev/null) || charmap=
+    if [ "$charmap" != UTF-8 ]; then
+        for candidate in C.UTF-8 en_US.UTF-8; do
+            charmap=$(LC_ALL="$candidate" locale charmap 2>/dev/null) || charmap=
+            if [ "$charmap" = UTF-8 ]; then
+                shell_locale=$candidate
+                break
+            fi
+        done
+    fi
+fi
+if [ -n "$shell_locale" ]; then
+    LANG=$shell_locale
+    LC_CTYPE=$shell_locale
+    export LANG LC_CTYPE
+    if [ -n "${LC_ALL:-}" ]; then
+        LC_ALL=$shell_locale
+        export LC_ALL
+    fi
+fi
+unset shell_locale charmap candidate
 
 # Preserve inherited tool/virtualenv priority when this file is sourced again.
 if [ "$DIST" = termux ]; then
