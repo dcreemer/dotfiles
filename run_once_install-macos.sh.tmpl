@@ -26,10 +26,10 @@ brew install \
     direnv \
     bat \
     htop \
-    emacs \
     wget
 brew install --cask \
-    appcleaner
+    appcleaner \
+    emacs-app
 {{     if eq .profile "full" }}
 
 # Full-profile extras
@@ -42,7 +42,6 @@ brew install \
 brew install --cask \
     soundsource \
     finicky \
-    stay \
     font-bitstream-vera
 {{         if eq .location "home" }}
 
