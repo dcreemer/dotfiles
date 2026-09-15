@@ -7,7 +7,6 @@ font-thicken-strength = 20
 # font-feature = -liga
 # font-feature = -dlig
 font-size = 13
-command = /opt/homebrew/bin/bash -l
 minimum-contrast = 2.1
 cursor-style = block
 cursor-style-blink = false
