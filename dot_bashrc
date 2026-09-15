@@ -54,6 +54,7 @@ unset set_title
 # Select the color flags supported by the installed tools.
 if command ls --color=auto -d . >/dev/null 2>&1; then
     alias ls='ls --color=auto -F'
+    export CLICOLOR=1
 elif command ls -G -d . >/dev/null 2>&1; then
     alias ls='ls -GF'
 else
