@@ -1,4 +1,4 @@
-[[ $- == *i* ]] || return
+[[ $- == *i* ]] || return 0
 
 # shellcheck disable=SC2155,SC2039
 #

@@ -10,6 +10,8 @@ if [ "$OS" = Linux ]; then
 fi
 export OS DIST
 
+# Keep the inherited LANG and LC_* locale settings.
+
 # Preserve inherited tool/virtualenv priority when this file is sourced again.
 if [ "$DIST" = termux ]; then
     case "${PREFIX:-}" in

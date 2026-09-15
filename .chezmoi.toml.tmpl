@@ -8,9 +8,6 @@ encryption = "gpg"
     location = "{{ $location }}"
     profile = "{{ $profile }}"
 
-[secret]
-    command = "1pass"
-
 [gpg]
     args = ["-q"]
     recipient = "{{ $email }}"

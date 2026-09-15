@@ -16,9 +16,11 @@ unset f
 
 # Prompt, terminal setup, and hooks belong only in interactive shells.
 if [[ $- != *i* ]]; then
-    return
+    return 0
 fi
 
+color_prompt=no
+set_title=no
 case "${TERM:-}" in
     xterm*|rxvt*)
         color_prompt=yes
@@ -29,7 +31,7 @@ case "${TERM:-}" in
         # emacs Term mode behaves much like xterm
         export TERM=xterm
         ;;
-    screen*)
+    screen*|tmux*|linux*)
         color_prompt=yes
         ;;
     *)
@@ -49,47 +51,36 @@ if [ "${set_title:-}" = "yes" ]; then
 fi
 unset set_title
 
-# aliases:
-case "$OS" in
-    Darwin)
-        alias ls='ls -GF'
-        ;;
-    FreeBSD)
-        alias ls='ls -GF'
-        ;;
-    Linux)
-        case "$DIST" in
-            alpine*)
-                alias ls='ls -F'
-                ;;
-            *)
-                alias ls='ls --color -F'
-                alias grep='grep --color=auto'
-                alias fgrep='fgrep --color=auto'
-                alias egrep='egrep --color=auto'
-                ;;
-        esac
-        ;;
-esac
+# Select the color flags supported by the installed tools.
+if command ls --color=auto -d . >/dev/null 2>&1; then
+    alias ls='ls --color=auto -F'
+elif command ls -G -d . >/dev/null 2>&1; then
+    alias ls='ls -GF'
+else
+    alias ls='ls -F'
+fi
+
+if command grep --color=auto . <<<x >/dev/null 2>&1; then
+    alias grep='grep --color=auto'
+    alias fgrep='grep -F --color=auto'
+    alias egrep='grep -E --color=auto'
+fi
 
 alias ec='emacsclient'
 alias ff='emacsclient -n'
 
 # history:
 export HISTTIMEFORMAT="[%Y-%m-%d %T] "
-export HISTSIZE=1000
+export HISTSIZE=50000
+export HISTFILESIZE=100000
+export HISTCONTROL=ignoreboth
 shopt -s histappend
 
 # shell editor
 export EDITOR="vi"
 
 # GPG
-export GPG_TTY=$(tty)
-
-# direnv fixes everything! https://direnv.net
-command -v direnv > /dev/null && eval "$(direnv hook bash)"
-
-# FZF completion
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
-
-# done
+if [[ -t 0 ]]; then
+    GPG_TTY=$(tty)
+    export GPG_TTY
+fi

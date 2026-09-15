@@ -2,3 +2,4 @@
 .bash.d/freebsd.sh
 .bash.d/termux.sh
 .bash.d/wsl.sh
+.bash.d/1pass.sh

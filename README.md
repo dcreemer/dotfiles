@@ -18,6 +18,17 @@ To run a remote command with the configured environment:
 ssh host 'bash -lc "command"'
 ```
 
+## Tools
+
+Bash completion loads when installed. direnv updates the environment as you
+change directories. If pyenv is installed, it supplies Python shims; use a
+version that supports `pyenv init - --no-push-path bash` so nested shells keep
+an activated virtualenv's priority.
+
+History keeps 50,000 entries in memory and 100,000 on disk, skipping commands
+with a leading space and consecutive duplicates. Console prompts support color,
+and `ls`/`grep` use color when available. Existing locale settings are preserved.
+
 ## SSH agent
 
 Shells preserve agents supplied by the desktop or SSH forwarding. Otherwise,

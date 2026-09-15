@@ -9,7 +9,7 @@ for dir in "$PYENV_ROOT/bin" "$PYENV_ROOT/shims"; do
 done
 unset dir
 
-[[ $- == *i* ]] || return
+[[ $- == *i* ]] || return 0
 if command -v pyenv >/dev/null 2>&1; then
     eval "$(pyenv init - --no-push-path bash)"
 fi
