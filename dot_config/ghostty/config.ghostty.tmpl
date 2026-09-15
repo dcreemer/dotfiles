@@ -1,13 +1,18 @@
-{{- $useHack := and (eq .chezmoi.os "linux") (eq .chezmoi.hostname "polaris") -}}
+{{- $font := "SF Mono Terminal Regular" -}}
+{{- $size := 13 -}}
+{{- if and (eq .chezmoi.os "linux") (eq .chezmoi.hostname "polaris") -}}
+{{-     $font = "Hack" -}}
+{{-     $size = 10.5 -}}
+{{- end -}}
 # theme = "Builtin Light"
 theme = "Modus Vivendi"
-font-family = "{{ if $useHack }}Hack{{ else }}SF Mono Terminal Regular{{ end }}"
+font-family = "{{ $font }}"
 font-thicken = true
 font-thicken-strength = 20
 # font-feature = -calt
 # font-feature = -liga
 # font-feature = -dlig
-font-size = {{ if $useHack }}10.5{{ else }}13{{ end }}
+font-size = {{ $size }}
 minimum-contrast = 2.1
 cursor-style = block
 cursor-style-blink = false

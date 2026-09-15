@@ -1,7 +1,12 @@
 {{- if eq .chezmoi.os "freebsd" -}}
-{{-     if not (hasKey . "desktop") -}}
-{{-         fail "Run chezmoi init to choose whether this is a desktop machine." -}}
-{{-     end -}}
+{{- if not (hasKey . "desktop") -}}
+{{-     fail "Run chezmoi init to choose whether this is a desktop machine." -}}
+{{- end -}}
+{{- /* Desktop machines get a GUI Emacs. */ -}}
+{{- $emacs := "emacs-nox" -}}
+{{- if .desktop -}}
+{{-     $emacs = "emacs" -}}
+{{- end -}}
 #!/bin/sh
 set -eu
 
@@ -21,11 +26,7 @@ sudo pkg install -y \
     direnv \
     bat \
     htop \
-{{         if .desktop -}}
-    emacs
-{{         else -}}
-    emacs-nox
-{{         end -}}
+    {{ $emacs }}
 
 # UTF-8 locale and SSH clients
 
@@ -40,18 +41,16 @@ done
 bash_path=/usr/local/bin/bash
 # shellcheck disable=SC2016
 "$bash_path" --noprofile --norc -c 'test "${BASH_VERSINFO[0]}" -ge 5'
-user_name=$(id -un)
-account_entry=$(getent passwd "$user_name")
-current_shell=$(printf '%s\n' "$account_entry" | cut -d: -f7)
-[ -n "$current_shell" ]
-if [ "$current_shell" != "$bash_path" ]; then
+current_shell() {
+    getent passwd "$(id -un)" | cut -d: -f7
+}
+shell_now=$(current_shell)
+[ -n "$shell_now" ]
+if [ "$shell_now" != "$bash_path" ]; then
     if ! grep -Fxq "$bash_path" /etc/shells; then
         printf '%s\n' "$bash_path" | sudo tee -a /etc/shells >/dev/null
     fi
     chsh -s "$bash_path"
 fi
-account_entry=$(getent passwd "$user_name")
-current_shell=$(printf '%s\n' "$account_entry" | cut -d: -f7)
-[ -n "$current_shell" ]
-[ "$current_shell" = "$bash_path" ]
+[ "$(current_shell)" = "$bash_path" ]
 {{ end -}}

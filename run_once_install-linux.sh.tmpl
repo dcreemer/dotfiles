@@ -1,31 +1,32 @@
 {{- if eq .chezmoi.os "linux" -}}
-{{-     $release := get .chezmoi "osRelease" | default dict -}}
-{{-     $id := get $release "id" | default "" -}}
-{{-     $family := "" -}}
-{{-     if eq $id "arch" -}}
-{{-         $family = "arch" -}}
-{{-     else if or (eq $id "debian") (eq $id "ubuntu") -}}
-{{-         $family = "debian" -}}
-{{-     else -}}
-{{-         range (regexSplit "\\s+" (get $release "idLike" | default "") -1) -}}
-{{-             if eq $family "" -}}
-{{-                 if eq . "arch" -}}
-{{-                     $family = "arch" -}}
-{{-                 else if or (eq . "debian") (eq . "ubuntu") -}}
-{{-                     $family = "debian" -}}
-{{-                 end -}}
-{{-             end -}}
-{{-         end -}}
+{{- /* Map this distribution to a package family: its own id first, then each idLike parent in order. */ -}}
+{{- $release := get .chezmoi "osRelease" | default dict -}}
+{{- $ids := splitList " " (printf "%s %s" (get $release "id" | default "") (get $release "idLike" | default "")) -}}
+{{- $families := dict "arch" "arch" "debian" "debian" "ubuntu" "debian" -}}
+{{- $family := "" -}}
+{{- range $ids -}}
+{{-     if eq $family "" -}}
+{{-         $family = get $families . -}}
 {{-     end -}}
-{{-     if and (ne $family "") (not (hasKey . "desktop")) -}}
+{{- end -}}
+{{- /* Desktop machines get a GUI Emacs; each family names the package differently. */ -}}
+{{- $emacs := "emacs-nox" -}}
+{{- if ne $family "" -}}
+{{-     if not (hasKey . "desktop") -}}
 {{-         fail "Run chezmoi init to choose whether this is a desktop machine." -}}
 {{-     end -}}
+{{-     if and .desktop (eq $family "arch") -}}
+{{-         $emacs = "emacs-wayland" -}}
+{{-     else if and .desktop (eq $family "debian") -}}
+{{-         $emacs = "emacs-gtk" -}}
+{{-     end -}}
+{{- end -}}
 #!/bin/sh
 set -eu
 
 # Packages
 
-{{     if eq $family "arch" -}}
+{{ if eq $family "arch" -}}
 sudo pacman -Syu --needed --noconfirm \
     bash \
     bash-completion \
@@ -36,16 +37,13 @@ sudo pacman -Syu --needed --noconfirm \
     direnv \
     bat \
     htop \
-{{         if .desktop -}}
-    emacs-wayland \
-{{         else -}}
-    emacs-nox \
-{{         end -}}
+    {{ $emacs }} \
     openssh \
     base-devel \
     man-db \
     man-pages
-{{     else if eq $family "debian" -}}
+
+{{ else if eq $family "debian" -}}
 sudo apt-get update
 sudo apt-get install -y \
     bash \
@@ -57,21 +55,19 @@ sudo apt-get install -y \
     direnv \
     bat \
     htop \
-{{         if .desktop -}}
-    emacs-gtk \
-{{         else -}}
-    emacs-nox \
-{{         end -}}
+    {{ $emacs }} \
     openssh-client \
     build-essential \
     man-db \
     manpages \
     locales
-{{     else -}}
+
+{{ else -}}
 printf '%s\n' 'Unsupported Linux distribution: install packages manually.' >&2
 exit 1
-{{     end }}
-{{     if ne $family "" -}}
+{{ end -}}
+
+{{ if ne $family "" -}}
 # UTF-8 locale
 
 # Keep a working locale; otherwise ensure a UTF-8 fallback is available.
@@ -94,20 +90,18 @@ fi
 bash_path=/bin/bash
 # shellcheck disable=SC2016
 "$bash_path" --noprofile --norc -c 'test "${BASH_VERSINFO[0]}" -ge 5'
-user_name=$(id -un)
-account_entry=$(getent passwd "$user_name")
-current_shell=$(printf '%s\n' "$account_entry" | cut -d: -f7)
-[ -n "$current_shell" ]
+current_shell() {
+    getent passwd "$(id -un)" | cut -d: -f7
+}
+shell_now=$(current_shell)
+[ -n "$shell_now" ]
 # /bin/bash and /usr/bin/bash may name the same executable.
-if [ "$(readlink -f "$current_shell")" != "$(readlink -f "$bash_path")" ]; then
+if [ "$(readlink -f "$shell_now")" != "$(readlink -f "$bash_path")" ]; then
     if ! grep -Fxq "$bash_path" /etc/shells; then
         printf '%s\n' "$bash_path" | sudo tee -a /etc/shells >/dev/null
     fi
     chsh -s "$bash_path"
 fi
-account_entry=$(getent passwd "$user_name")
-current_shell=$(printf '%s\n' "$account_entry" | cut -d: -f7)
-[ -n "$current_shell" ]
-[ "$(readlink -f "$current_shell")" = "$(readlink -f "$bash_path")" ]
-{{     end -}}
+[ "$(readlink -f "$(current_shell)")" = "$(readlink -f "$bash_path")" ]
+{{ end -}}
 {{ end -}}

@@ -30,8 +30,8 @@ brew install \
 brew install --cask \
     appcleaner \
     emacs-app
-{{     if eq .profile "full" }}
 
+{{ if eq .profile "full" -}}
 # Full-profile extras
 
 brew install \
@@ -43,8 +43,10 @@ brew install --cask \
     soundsource \
     finicky \
     font-bitstream-vera
-{{         if eq .location "home" }}
 
+{{ end -}}
+
+{{ if and (eq .profile "full") (eq .location "home") -}}
 # Home-machine extras
 
 brew install \
@@ -56,8 +58,9 @@ brew install --cask \
     visual-studio-code \
     calibre \
     zoom
-{{         end -}}
-{{     end }}
+
+{{ end -}}
+
 # UTF-8 locale and SSH clients
 
 # macOS supplies this locale and the OpenSSH client tools.
@@ -72,17 +75,16 @@ bash_path=/opt/homebrew/bin/bash
 # shellcheck disable=SC2016
 "$bash_path" --noprofile --norc -c 'test "${BASH_VERSINFO[0]}" -ge 5'
 user_name=$(id -un)
-account_entry=$(dscl . -read "/Users/$user_name" UserShell)
-current_shell=$(printf '%s\n' "$account_entry" | awk '{print $2}')
-[ -n "$current_shell" ]
-if [ "$current_shell" != "$bash_path" ]; then
+current_shell() {
+    dscl . -read "/Users/$user_name" UserShell | awk '{print $2}'
+}
+shell_now=$(current_shell)
+[ -n "$shell_now" ]
+if [ "$shell_now" != "$bash_path" ]; then
     if ! grep -Fxq "$bash_path" /etc/shells; then
         printf '%s\n' "$bash_path" | sudo tee -a /etc/shells >/dev/null
     fi
     sudo chsh -s "$bash_path" "$user_name"
 fi
-account_entry=$(dscl . -read "/Users/$user_name" UserShell)
-current_shell=$(printf '%s\n' "$account_entry" | awk '{print $2}')
-[ -n "$current_shell" ]
-[ "$current_shell" = "$bash_path" ]
+[ "$(current_shell)" = "$bash_path" ]
 {{ end -}}

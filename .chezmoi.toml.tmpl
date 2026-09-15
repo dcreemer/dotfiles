@@ -1,6 +1,12 @@
-{{- $email := promptString "email" -}}
-{{- $location := promptString "location? (home|work|other)" "home" -}}
-{{- $profile := promptString "profile? (basic|full)" "basic" -}}
+{{- $email := promptStringOnce . "email" "email" -}}
+{{- $location := promptStringOnce . "location" "location? (home|work|other)" "home" -}}
+{{- $profile := promptStringOnce . "profile" "profile? (basic|full)" "basic" -}}
+{{- if not (has $location (list "home" "work" "other")) -}}
+{{-     fail (printf "location must be home, work, or other; got %q" $location) -}}
+{{- end -}}
+{{- if not (has $profile (list "basic" "full")) -}}
+{{-     fail (printf "profile must be basic or full; got %q" $profile) -}}
+{{- end -}}
 {{- $desktop := eq .chezmoi.os "darwin" -}}
 {{- if or (eq .chezmoi.os "linux") (eq .chezmoi.os "freebsd") -}}
 {{-     $desktop = promptBoolOnce . "desktop" "Desktop machine" false -}}
