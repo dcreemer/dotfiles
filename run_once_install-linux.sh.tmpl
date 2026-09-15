@@ -17,6 +17,9 @@
 {{-             end -}}
 {{-         end -}}
 {{-     end -}}
+{{-     if and (ne $family "") (not (hasKey . "desktop")) -}}
+{{-         fail "Run chezmoi init to choose whether this is a desktop machine." -}}
+{{-     end -}}
 #!/bin/sh
 set -eu
 
@@ -33,7 +36,11 @@ sudo pacman -Syu --needed --noconfirm \
     direnv \
     bat \
     htop \
+{{         if .desktop -}}
+    emacs-wayland \
+{{         else -}}
     emacs-nox \
+{{         end -}}
     openssh \
     base-devel \
     man-db \
@@ -50,7 +57,11 @@ sudo apt-get install -y \
     direnv \
     bat \
     htop \
+{{         if .desktop -}}
+    emacs-gtk \
+{{         else -}}
     emacs-nox \
+{{         end -}}
     openssh-client \
     build-essential \
     man-db \

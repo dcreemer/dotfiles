@@ -26,6 +26,11 @@ CLI tools, and selects Bash 5+ as your login shell. It asks for your email,
 profile (`basic`/`full`), location, and any required passwords. macOS installs
 Homebrew if needed and keeps the profile/location-specific extras.
 
+Linux and FreeBSD also ask whether this is a desktop machine. Desktops get GUI
+Emacs (`emacs-wayland` on Arch, `emacs-gtk` on Debian/Ubuntu, `emacs` on FreeBSD);
+headless boxes get `emacs-nox`. This choice is saved, so syncing over SSH uses
+the same package. On an existing installation, run `chezmoi init` to set it.
+
 Arch and Termux perform a full package upgrade before installing tools.
 Installers run again when their contents change. Restart your sessions after
 installation: log out and back in (or reboot), and end old tmux servers.

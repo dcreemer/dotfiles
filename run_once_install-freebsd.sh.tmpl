@@ -1,4 +1,7 @@
 {{- if eq .chezmoi.os "freebsd" -}}
+{{-     if not (hasKey . "desktop") -}}
+{{-         fail "Run chezmoi init to choose whether this is a desktop machine." -}}
+{{-     end -}}
 #!/bin/sh
 set -eu
 
@@ -18,7 +21,11 @@ sudo pkg install -y \
     direnv \
     bat \
     htop \
+{{         if .desktop -}}
+    emacs
+{{         else -}}
     emacs-nox
+{{         end -}}
 
 # UTF-8 locale and SSH clients
 

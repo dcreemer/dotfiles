@@ -1,14 +1,18 @@
 {{- $email := promptString "email" -}}
 {{- $location := promptString "location? (home|work|other)" "home" -}}
 {{- $profile := promptString "profile? (basic|full)" "basic" -}}
+{{- $desktop := eq .chezmoi.os "darwin" -}}
+{{- if or (eq .chezmoi.os "linux") (eq .chezmoi.os "freebsd") -}}
+{{-     $desktop = promptBoolOnce . "desktop" "Desktop machine" false -}}
+{{- end -}}
 encryption = "gpg"
 
 [data]
     email = "{{ $email }}"
     location = "{{ $location }}"
     profile = "{{ $profile }}"
+    desktop = {{ $desktop }}
 
 [gpg]
     args = ["-q"]
     recipient = "{{ $email }}"
-
