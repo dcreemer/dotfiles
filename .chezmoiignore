@@ -3,3 +3,10 @@ PLAN.md
 {{ if (or (ne .profile "full") (ne .chezmoi.os "darwin"))  -}}
 .hammerspoon
 {{- end }}
+
+{{- $release := get .chezmoi "osRelease" | default dict -}}
+{{- $ids := splitList " " (printf "%s %s" (get $release "id" | default "") (get $release "idLike" | default "")) -}}
+{{ if not (and (eq .chezmoi.os "linux") (has "arch" $ids)) }}
+.makepkg.conf
+.config/yay
+{{ end -}}

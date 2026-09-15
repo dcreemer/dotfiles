@@ -1,0 +1,2 @@
+{{- /* chezmoi:modify-template */ -}}
+{{ .chezmoi.stdin | default "{}" | fromJson | setValueAtPath "cleanAfter" true | setValueAtPath "keepSrc" false | toPrettyJson }}
