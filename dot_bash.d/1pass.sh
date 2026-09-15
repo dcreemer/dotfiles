@@ -1,3 +1,5 @@
+[[ $- == *i* ]] || return
+
 # shellcheck disable=SC2155,SC2039
 #
 # commands depending on 1pass

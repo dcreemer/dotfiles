@@ -1,4 +1,5 @@
 README.md
+PLAN.md
 {{ if (or (ne .profile "full") (ne .chezmoi.os "darwin"))  -}}
 .hammerspoon
 {{- end }}

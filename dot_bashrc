@@ -3,12 +3,23 @@
 # should work on FreeBSD, Mac OS X, and Linux
 #
 
-# If not running interactively, don't do anything
+if [[ -r "$HOME/.shell_env" ]]; then
+    source "$HOME/.shell_env"
+fi
+
+# Fragments put environment setup before their own interactive guard.
+for f in "$HOME"/.bash.d/*.sh; do
+    [[ -f "$f" && -r "$f" ]] || continue
+    source "$f"
+done
+unset f
+
+# Prompt, terminal setup, and hooks belong only in interactive shells.
 if [[ $- != *i* ]]; then
     return
 fi
 
-case "$TERM" in
+case "${TERM:-}" in
     xterm*|rxvt*)
         color_prompt=yes
         set_title=yes
@@ -25,7 +36,7 @@ case "$TERM" in
         ;;
 esac
 
-if [ "$color_prompt" = yes ]; then
+if [ "${color_prompt:-}" = yes ]; then
     PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 else
     PS1='\u@\h:\w\$ '
@@ -33,7 +44,7 @@ fi
 unset color_prompt
 
 # when in a terminal window, change the title bar:
-if [ "$set_title" = "yes" ]; then
+if [ "${set_title:-}" = "yes" ]; then
     PS1="\[\e]0;\u@\h: \w\a\]$PS1"
 fi
 unset set_title
@@ -48,7 +59,7 @@ case "$OS" in
         ;;
     Linux)
         case "$DIST" in
-            Alpine*)
+            alpine*)
                 alias ls='ls -F'
                 ;;
             *)
@@ -74,11 +85,6 @@ export EDITOR="vi"
 
 # GPG
 export GPG_TTY=$(tty)
-
-# load other bash configuration
-for f in ${HOME}/.bash.d/*; do
-   source "$f"
-done
 
 # direnv fixes everything! https://direnv.net
 command -v direnv > /dev/null && eval "$(direnv hook bash)"

@@ -1,19 +1,10 @@
-# shellcheck disable=SC2155,SC2039
-#
-# macOS specific
-#
+# Bear's CLI is also used by automation and inherited non-login scripts.
+if [[ ${OS:-} == Darwin && -x /Applications/Bear.app/Contents/MacOS/bearcli ]]; then
+    case ":${PATH:-}:" in
+        *:/Applications/Bear.app/Contents/MacOS:*) ;;
+        *) export PATH="/Applications/Bear.app/Contents/MacOS${PATH:+:$PATH}" ;;
+    esac
 
-if [ "$OS" == "Darwin" ]; then
-
-   # start ssh-agent
-   pgrep ssh-agent > /dev/null
-   if [ $? -ne 0 ]; then
-       eval `ssh-agent -s`
-   fi
-
-   # check for Bear & esstup CLI
-   if [ -x "/Applications/Bear.app/Contents/MacOS/bearcli" ]; then
-       alias bearcli="/Applications/Bear.app/Contents/MacOS/bearcli"
-       eval "$(bearcli --generate-completion-script bash)"
-   fi
+    [[ $- == *i* ]] || return 0
+    eval "$(/Applications/Bear.app/Contents/MacOS/bearcli --generate-completion-script bash)"
 fi

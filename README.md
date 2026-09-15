@@ -1,12 +1,29 @@
-My current set of dotfiles. Uses [Chezmoi](https://github.com/twpayne/chezmoi) for
-installation and management.
+My Bash dotfiles, managed with [chezmoi](https://www.chezmoi.io/), for macOS,
+Linux, FreeBSD, and Termux.
 
-This configuration is designed to use the
-[Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)) shell on Mac OS, Linux,
-and similar environments like WSL and [Termux](https://termux.com/). It sets up
-a consistent environment general CLI usage and development.
+- Sets `OS`, `DIST`, and tool paths without resetting the inherited PATH.
+- Loads prompt and completion in interactive shells.
+- Makes tool paths, including macOS `bearcli`, available to login-shell automation.
 
-Some features:
+## Startup
 
-- Sets a few extra environment variables, such as `OS` and `DIST`
-- Ensures the `ssh-agent` is properly running and terminated as appropriate
+Bash login shells load `.bash_profile` → `.profile` → `.bashrc`.
+`.bashrc` loads the shared `.shell_env` and `.bash.d/*.sh` tool fragments.
+Environment setup runs first; prompt and completion setup runs only in
+interactive shells. Reopening or nesting a shell preserves existing PATH order.
+
+To run a remote command with the configured environment:
+
+```sh
+ssh host 'bash -lc "command"'
+```
+
+## SSH agent
+
+Shells preserve agents supplied by the desktop or SSH forwarding. Otherwise,
+they share an agent at `~/.ssh/agent.sock`, starting it when needed and retrying
+a stale socket once. An agent with no keys is reused, and closing a shell
+leaves the agent running.
+
+SSH config gets an `AddKeysToAgent yes` default so keys are added when used.
+Existing host settings are preserved and take precedence over this default.

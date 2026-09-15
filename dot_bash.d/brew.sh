@@ -18,6 +18,9 @@ for b in /opt/homebrew /usr/local /home/linuxbrew/.linuxbrew; do
 done
 
 if [ "$BREW" != "" ]; then
+    export HOMEBREW_NO_ANALYTICS=1
+    [[ $- == *i* ]] || return
+
     # bash completion via Homebrew
     COMP="$BREW"/etc/profile.d/bash_completion.sh
     if [ -r "${COMP}" ]; then
@@ -25,7 +28,4 @@ if [ "$BREW" != "" ]; then
         . "${COMP}"
     fi
 
-    # Turn off Homebrew analytics
-    # https://github.com/Homebrew/brew/blob/master/share/doc/homebrew/Analytics.md
-    export HOMEBREW_NO_ANALYTICS=1
 fi

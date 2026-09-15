@@ -1,0 +1,4 @@
+# Bash login shells use the shared profile.
+if [ -r "$HOME/.profile" ]; then
+    . "$HOME/.profile"
+fi

@@ -1,0 +1,4 @@
+.bash.d/arch.sh
+.bash.d/freebsd.sh
+.bash.d/termux.sh
+.bash.d/wsl.sh

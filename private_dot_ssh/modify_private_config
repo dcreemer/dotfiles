@@ -1,0 +1,6 @@
+{{/* chezmoi:modify-template */}}
+{{- $defaults := "\n# chezmoi: SSH agent defaults\nHost *\n    AddKeysToAgent yes\n" -}}
+{{- .chezmoi.stdin -}}
+{{- if not (contains $defaults .chezmoi.stdin) -}}
+{{- $defaults -}}
+{{- end -}}

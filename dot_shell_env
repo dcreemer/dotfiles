@@ -1,0 +1,91 @@
+# Shared environment for login shells and Bash. Keep this file POSIX sh.
+OS=$(uname)
+DIST=NA
+if [ "$OS" = Linux ]; then
+    if [ -n "${TERMUX_VERSION:-}${ANDROID_ROOT:-}" ]; then
+        DIST=termux
+    elif [ -r /etc/os-release ]; then
+        DIST=$(. /etc/os-release; printf '%s' "${ID:-NA}")
+    fi
+fi
+export OS DIST
+
+# Preserve inherited tool/virtualenv priority when this file is sourced again.
+if [ "$DIST" = termux ]; then
+    case "${PREFIX:-}" in
+        /*)
+            for dir in "$PREFIX/bin" "$PREFIX/bin/applets"; do
+                [ -d "$dir" ] || continue
+                case ":${PATH:-}:" in
+                    *":$dir:"*) ;;
+                    *) PATH="${PATH:+$PATH:}$dir" ;;
+                esac
+            done
+            ;;
+    esac
+    USER=$(id -un)
+    export USER
+else
+    for dir in /usr/local/bin /usr/local/sbin /usr/bin /usr/sbin /bin /sbin; do
+        [ -d "$dir" ] || continue
+        case ":${PATH:-}:" in
+            *":$dir:"*) ;;
+            *) PATH="${PATH:+$PATH:}$dir" ;;
+        esac
+    done
+fi
+export PATH
+
+for brew_prefix in /opt/homebrew /usr/local /home/linuxbrew/.linuxbrew; do
+    [ -x "$brew_prefix/bin/brew" ] || continue
+    if [ -z "${HOMEBREW_PREFIX:-}" ]; then
+        eval "$("$brew_prefix/bin/brew" shellenv sh)"
+    fi
+    for dir in "$brew_prefix/sbin" "$brew_prefix/bin"; do
+        [ -d "$dir" ] || continue
+        case ":${PATH:-}:" in
+            *":$dir:"*) ;;
+            *) PATH="$dir${PATH:+:$PATH}" ;;
+        esac
+    done
+    break
+done
+
+for dir in /snap/bin "$HOME/.local/bin"; do
+    [ -d "$dir" ] || continue
+    case ":${PATH:-}:" in
+        *":$dir:"*) ;;
+        *) PATH="$dir${PATH:+:$PATH}" ;;
+    esac
+done
+export PATH
+unset dir brew_prefix
+
+# Reuse forwarded/desktop agents. Otherwise use our stable socket.
+if command -v ssh-add >/dev/null 2>&1 && command -v ssh-agent >/dev/null 2>&1; then
+    case "${SSH_AUTH_SOCK:-}" in
+        ""|"$HOME/.ssh/agent.sock")
+            SSH_AUTH_SOCK="$HOME/.ssh/agent.sock"
+            export SSH_AUTH_SOCK
+            unset SSH_AGENT_PID
+            agent_status=0
+            ssh-add -l >/dev/null 2>&1 || agent_status=$?
+            # Exit 1 includes an empty agent; only 2 means no connection.
+            if [ "$agent_status" -eq 2 ] &&
+                mkdir -p "$HOME/.ssh" 2>/dev/null &&
+                chmod 700 "$HOME/.ssh" 2>/dev/null; then
+                if ! ssh-agent -s -a "$SSH_AUTH_SOCK" >/dev/null 2>&1; then
+                    # Another shell may have started it. Retry a stale socket once.
+                    agent_status=0
+                    ssh-add -l >/dev/null 2>&1 || agent_status=$?
+                    if [ "$agent_status" -eq 2 ] && [ -S "$SSH_AUTH_SOCK" ]; then
+                        if rm -f "$SSH_AUTH_SOCK" 2>/dev/null; then
+                            ssh-agent -s -a "$SSH_AUTH_SOCK" >/dev/null 2>&1 || :
+                        fi
+                    fi
+                fi
+            fi
+            unset agent_status
+            ;;
+    esac
+fi
