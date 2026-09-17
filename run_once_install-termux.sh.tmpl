@@ -8,7 +8,7 @@ set -eu
 
 # Packages
 
-prefix={{ $prefix | shellQuote }}
+prefix='{{ $prefix | replace "'" "'\"'\"'" }}'
 [ -x "$prefix/bin/pkg" ]
 export PATH="$prefix/bin:${PATH:-}"
 # Termux is rolling-release: update before adding packages.
