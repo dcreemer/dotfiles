@@ -46,7 +46,10 @@
       (add-to-list 'default-frame-alist '(left . 50))
       (add-to-list 'default-frame-alist '(top . 50))
       (add-to-list 'default-frame-alist '(width . 120))  ; Columns
-      (add-to-list 'default-frame-alist '(height . 54))) ; Rows
+      (if *is-a-mac*
+          ;; My macs have bigger screens
+          (add-to-list 'default-frame-alist '(height . 55))
+          (add-to-list 'default-frame-alist '(height . 35)))) ; Rows
   (menu-bar-mode -1))
 
 ;; Enable basic mouse support in terminals.
