@@ -213,7 +213,11 @@
 
 ;; Use ghostty lib for terminals
 (use-package ghostel
-  :ensure t)
+  :ensure t
+  :init
+  (setq ghostel-module-auto-install 'download
+        ghostel-module-directory
+        (expand-file-name "state/ghostel/" user-emacs-directory)))
 
 (defun rlr/ghostel-buffer ()
   "Return the active ghostel buffer, or nil if none exists."
