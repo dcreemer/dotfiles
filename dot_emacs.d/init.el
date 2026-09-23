@@ -12,7 +12,7 @@
 ;; -----------------------------------------------------------------------------
 
 ;; Add MELPA to end of archives list
-(package-initialize)
+(require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 
 ;; bootup package system
@@ -26,14 +26,11 @@
 ;; -----------------------------------------------------------------------------
 
 (defconst *is-a-mac* (eq system-type 'darwin))
-(defconst *is-mac-gui* (and (display-graphic-p) *is-a-mac*))
 
 ;; Mac OS X Emacs.app needs a bit of help getting shell variables
 (use-package exec-path-from-shell
   :if *is-a-mac*
   :ensure t
-  :init
-  (setq exec-path-from-shell-check-startup-files nil)
   :config
   (dolist (var '("SSH_AUTH_SOCK" "SSH_AGENT_PID" "GPG_AGENT_INFO" "LANG" "LC_CTYPE"
                  "GOPATH" "OS" "DIST"))
@@ -107,9 +104,6 @@
 
 ;; indent is 4 charactes
 (setq-default c-basic-offset 4)
-
-;; tabs are 8
-(setq-default tab-width 8)
 
 ;; never insert tabs
 (setq-default indent-tabs-mode nil)
@@ -214,6 +208,7 @@
 ;; Use ghostty lib for terminals
 (use-package ghostel
   :ensure t
+  :commands ghostel
   :init
   (setq ghostel-module-auto-install 'download
         ghostel-module-directory
@@ -297,7 +292,6 @@
   :ensure t
   :defer t
   :mode ("\\.md\\'" "\\.markdown\\'")
-  :config
   :hook ((markdown-mode . display-fill-column-indicator-mode)
          (markdown-mode . auto-fill-mode)))
 
@@ -323,7 +317,8 @@
 
 (use-package pet
   :ensure t
-  :config
+  :commands pet-mode
+  :init
   (add-hook 'python-base-mode-hook 'pet-mode -10))
 
 ;; (use-package clojure-mode
@@ -344,9 +339,7 @@
 ;; Janet
 (use-package janet-mode
   :ensure t
-  :config
-  (add-hook 'janet-mode-hook
-            'rainbow-delimiters-mode))
+  :defer t)
 
 ;; Dove:
 ;; (define-derived-mode dove-mode lisp-mode "Dove"
@@ -362,13 +355,11 @@
   :ensure t
   :config
   (dashboard-setup-startup-hook)
-  (setq dashboard-startup-banner 'official)
   (setq dashboard-items '((recents  . 5)
                           (projects . 5)))
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t)
-  (setq dashboard-center-content t)
-  (setq dashboard-show-shortcuts t))
+  (setq dashboard-center-content t))
 
 ;; start the emacs server
 (server-start)
