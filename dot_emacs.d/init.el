@@ -3,26 +3,26 @@
 ;; init.el -- dcreemer's emacs file
 ;;
 ;;; Commentary:
-;; see README.md for info and credits
+;; Personal Emacs configuration.
 
 ;;; Code:
 
 ;; -----------------------------------------------------------------------------
-;; bootstrap the package system
+;; Bootstrap the package system
 ;; -----------------------------------------------------------------------------
 
 ;; Add MELPA to end of archives list
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 
-;; bootup package system
+;; Compile installed packages to native code.
 (setq package-native-compile t)
 
 (eval-when-compile
   (require 'use-package))
 
 ;; -----------------------------------------------------------------------------
-;; define the state of the system
+;; Define the state of the system
 ;; -----------------------------------------------------------------------------
 
 (defconst *is-a-mac* (eq system-type 'darwin))
@@ -37,7 +37,7 @@
     (add-to-list 'exec-path-from-shell-variables var))
   (exec-path-from-shell-initialize))
 
-;; turn on menu (for GUIs only), turn off tool-bar, scroll-bar
+;; Show the menu bar only in graphical frames; hide tool and scroll bars.
 (if (display-graphic-p)
     (progn
       (menu-bar-mode 1)
@@ -45,67 +45,66 @@
       (scroll-bar-mode -1)
       (add-to-list 'default-frame-alist '(left . 50))
       (add-to-list 'default-frame-alist '(top . 50))
-      (add-to-list 'default-frame-alist '(width . 120))   ;; columns
-      (add-to-list 'default-frame-alist '(height . 54)))   ;; rows
+      (add-to-list 'default-frame-alist '(width . 120))  ; Columns
+      (add-to-list 'default-frame-alist '(height . 54))) ; Rows
   (menu-bar-mode -1))
 
-;; in terminals, enable basic mouse support
+;; Enable basic mouse support in terminals.
 (unless (display-graphic-p)
   (xterm-mouse-mode 1))
 
-;; keep all transient state in a custom directory
+;; Keep transient state in a common directory.
 (defvar user-state-directory
   (expand-file-name "state" user-emacs-directory)
   "Default directory for transient user state.")
 
 (defun state-file (path)
-  "Calculate the PATH for a transient state file."
+  "Expand PATH relative to `user-state-directory'."
   (expand-file-name path user-state-directory))
 
-;; save backup files to common location, and keep more versions
+;; Store backups together and keep multiple versions.
 (setq backup-directory-alist `(("." . ,(state-file "backups")))
       delete-old-versions t
       kept-new-versions 3
       kept-old-versions 2
       version-control t)
 
-;; auto-save also goes to state directory
-(setq auto-save-list-file-prefix (state-file "auto-save-list/.saves-"))
-(setq auto-save-file-name-transforms
+;; Store auto-save files in the state directory too.
+(setq auto-save-list-file-prefix (state-file "auto-save-list/.saves-")
+      auto-save-file-name-transforms
       `(("\\`\\([^/]*/\\)*\\([^/]*\\)\\'" ; match /path/to/file and capture (file)
          ,(concat (state-file "auto-saves/") "\\2") t)))
 
-;; customizations go in a separate file
+;; Write customizations to a separate file.
 (setq custom-file (locate-user-emacs-file "custom.el"))
 
 ;; -----------------------------------------------------------------------------
 ;; UI-based customizations
 ;; -----------------------------------------------------------------------------
 
-;; we need diminish for the use-package support
+;; Support use-package's :diminish keyword.
 (use-package diminish
   :ensure t)
 
-;; set the color theme to something nice on startup
 (use-package modus-themes
   :ensure t
   :config
   (load-theme 'modus-vivendi-deuteranopia :no-confirm))
 
-;; fill column is about 1/2 full screen w/with two side-by-side windows on my mac
+;; Fit text into two side-by-side windows on my Mac.
 (setq-default fill-column 90)
 
 (use-package unfill
   :ensure t
   :bind ("M-q" . unfill-toggle))
 
-;; always show column numbers
+;; Always show column numbers.
 (setq-default column-number-mode t)
 
-;; indent is 4 charactes
+;; Use four-space indentation for C-family modes.
 (setq-default c-basic-offset 4)
 
-;; never insert tabs
+;; Indent with spaces.
 (setq-default indent-tabs-mode nil)
 
 ;; UTF-8 Unicode everywhere
@@ -119,63 +118,59 @@
 (prefer-coding-system 'utf-8)
 (setq default-process-coding-system '(utf-8-unix . utf-8-unix))
 
-;; why isn't it always this?
+;; Preserve the cursor's screen position when scrolling.
 (setq scroll-preserve-screen-position t)
 
-;; remember files I have visited
+;; Remember recently visited files.
 (use-package recentf
   :ensure nil
   :config
-  (setq recentf-max-saved-items 500)
-  (setq recentf-max-menu-items 5)
-  (setq recentf-save-file (state-file "recentf"))
-  (setq recentf-exclude '("/tmp/" "/ssh:"))
+  (setq recentf-max-saved-items 500
+        recentf-max-menu-items 5
+        recentf-save-file (state-file "recentf")
+        recentf-exclude '("/tmp/" "/ssh:"))
   (recentf-mode +1))
 
-;; preview line on goto
+;; Preview the destination when jumping to a line.
 (use-package goto-line-preview
   :ensure t
-  :bind ("M-g M-g" . #'goto-line-preview))
+  :bind ("M-g M-g" . goto-line-preview))
 
-;; ace-jump
 (use-package ace-jump-mode
   :ensure t
   :bind ("M-j" . ace-jump-mode))
 
-;; y or n instead of yes or no
-(defalias 'yes-or-no-p 'y-or-n-p)
+;; Accept y or n instead of yes or no.
+(defalias 'yes-or-no-p #'y-or-n-p)
 
-;; which-key is great
 (use-package which-key
   :ensure t
   :diminish which-key-mode
   :config
   (which-key-mode))
 
-;; configure a nicer modeline...
 (use-package doom-modeline
   :ensure t
-  :init (doom-modeline-mode 1))
+  :init
+  (doom-modeline-mode 1))
 
-;; ... with icons
 (use-package nerd-icons
   :ensure t)
 
-;; whitespace
 (use-package whitespace
   :ensure t
   :diminish whitespace-mode
   :hook (prog-mode . whitespace-mode)
   :config
-  (setq whitespace-line-column 99)
-  (setq whitespace-style '(face empty lines-tail trailing)))
+  (setq whitespace-line-column 99
+        whitespace-style '(face empty lines-tail trailing)))
 
-;; colorize parents
+;; Color delimiters by nesting depth.
 (use-package rainbow-delimiters
   :ensure t
   :hook (prog-mode . rainbow-delimiters-mode))
 
-;; like join from vim.
+;; Join lines as in Vim.
 (defun dc/join-forward ()
   "Join the next line to the current one."
   (interactive)
@@ -183,10 +178,9 @@
 
 (global-set-key (kbd "C-c J") #'dc/join-forward)
 
-;; make the cursor more visible:
+;; Highlight the current line to make the cursor easier to find.
 (global-hl-line-mode)
 
-;; undo tree
 (use-package vundo
   :ensure t
   :bind ("M-_" . vundo))
@@ -198,29 +192,29 @@
 (global-auto-revert-mode 1)
 
 (use-package ibuffer
-  :bind ("C-x C-b" . #'ibuffer-list-buffers)
+  :bind ("C-x C-b" . ibuffer-list-buffers)
   :config
-  ;; turn off forward and backward movement cycling
+  ;; Stop at the ends when navigating the buffer list.
   (customize-set-variable 'ibuffer-movement-cycle nil)
-  ;; the number of hours before a buffer is considered "old" by ibuffer.
+  ;; Consider buffers old after 24 hours.
   (customize-set-variable 'ibuffer-old-time 24))
 
-;; Use ghostty lib for terminals
+;; Use Ghostty for terminal buffers.
 (use-package ghostel
   :ensure t
   :commands ghostel
   :init
   (setq ghostel-module-auto-install 'download
-        ghostel-module-directory
-        (expand-file-name "state/ghostel/" user-emacs-directory)))
+        ghostel-module-directory (state-file "ghostel/")))
 
 (defun rlr/ghostel-buffer ()
-  "Return the active ghostel buffer, or nil if none exists."
+  "Return the first buffer whose name matches Ghostel, or nil if none exists."
   (seq-find (lambda (buf)
               (string-match-p "\\*ghostel:" (buffer-name buf)))
             (buffer-list)))
 
 (defun rlr/ghostel-toggle ()
+  "Show a Ghostel buffer, create one if needed, or bury it when current."
   (interactive)
   (let ((buf (rlr/ghostel-buffer)))
     (cond
@@ -231,10 +225,10 @@
      (t
       (switch-to-buffer buf)))))
 
-(bind-key* "M-$" 'rlr/ghostel-toggle)
+(bind-key* "M-$" #'rlr/ghostel-toggle)
 
 ;; -----------------------------------------------------------------------------
-;; Basic Utilities
+;; Basic utilities
 ;; -----------------------------------------------------------------------------
 
 (use-package ivy
@@ -243,12 +237,13 @@
   (ivy-mode))
 
 ;; -----------------------------------------------------------------------------
-;; Programming Mode Configuration
+;; Programming mode configuration
 ;; -----------------------------------------------------------------------------
 
 (use-package rg
   :ensure t
-  :config (rg-enable-default-bindings))
+  :config
+  (rg-enable-default-bindings))
 
 (use-package projectile
   :ensure t
@@ -260,24 +255,23 @@
     (setq-default projectile-generic-command "rg --files --hidden -0"))
   (projectile-mode +1))
 
-;; line numbers & delimiters
+;; Show line numbers and pair delimiters in programming modes.
 (use-package prog-mode
   :ensure nil
   :hook ((prog-mode . display-line-numbers-mode)
          (prog-mode . electric-pair-mode)))
 
-;; company for completion
 (use-package company
   :ensure t
   :init
   (global-company-mode))
 
-;; envrc for loading project-specific settings
+;; Load project-specific environment settings.
 (use-package envrc
   :ensure t
   :hook (after-init . envrc-global-mode))
 
-;; tree-sitter for all languages available
+;; Configure automatic tree-sitter mode selection and grammar installation.
 (use-package treesit-auto
   :ensure t
   :custom
@@ -287,7 +281,6 @@
   (delete 'rust treesit-auto-langs) ;; missing some features
   (global-treesit-auto-mode))
 
-;; markdown
 (use-package markdown-mode
   :ensure t
   :defer t
@@ -298,8 +291,8 @@
 (use-package rust-mode
   :ensure t
   :defer t
-  :hook ((rust-mode    . eglot-ensure)
-         (rust-mode    . cargo-minor-mode))
+  :hook ((rust-mode . eglot-ensure)
+         (rust-mode . cargo-minor-mode))
   :config
   (setq rust-format-on-save t)
   (use-package cargo
@@ -319,7 +312,7 @@
   :ensure t
   :commands pet-mode
   :init
-  (add-hook 'python-base-mode-hook 'pet-mode -10))
+  (add-hook 'python-base-mode-hook #'pet-mode -10))
 
 ;; (use-package clojure-mode
 ;;   :ensure t
@@ -336,7 +329,6 @@
   :ensure t
   :defer t)
 
-;; Janet
 (use-package janet-mode
   :ensure t
   :defer t)
@@ -350,18 +342,18 @@
 ;;  (when (file-exists-p pm)
 ;;     (load-file pm)))
 
-;; Startup Dashboard
+;; Startup dashboard
 (use-package dashboard
   :ensure t
   :config
   (dashboard-setup-startup-hook)
-  (setq dashboard-items '((recents  . 5)
-                          (projects . 5)))
-  (setq dashboard-set-heading-icons t)
-  (setq dashboard-set-file-icons t)
-  (setq dashboard-center-content t))
+  (setq dashboard-items '((recents . 5)
+                          (projects . 5))
+        dashboard-set-heading-icons t
+        dashboard-set-file-icons t
+        dashboard-center-content t))
 
-;; start the emacs server
+;; Start the Emacs server.
 (server-start)
 
 (provide 'init)
