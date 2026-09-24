@@ -49,7 +49,7 @@
       (if *is-a-mac*
           ;; My macs have bigger screens
           (add-to-list 'default-frame-alist '(height . 55))
-          (add-to-list 'default-frame-alist '(height . 35)))) ; Rows
+          (add-to-list 'default-frame-alist '(height . 37)))) ; Rows
   (menu-bar-mode -1))
 
 ;; Enable basic mouse support in terminals.
