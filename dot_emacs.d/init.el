@@ -37,24 +37,43 @@
     (add-to-list 'exec-path-from-shell-variables var))
   (exec-path-from-shell-initialize))
 
-;; Show the menu bar only in graphical frames; hide tool and scroll bars.
-(if (display-graphic-p)
-    (progn
-      (menu-bar-mode 1)
-      (tool-bar-mode -1)
-      (scroll-bar-mode -1)
-      (add-to-list 'default-frame-alist '(left . 50))
-      (add-to-list 'default-frame-alist '(top . 50))
-      (add-to-list 'default-frame-alist '(width . 120))  ; Columns
-      (if *is-a-mac*
-          ;; My macs have bigger screens
-          (add-to-list 'default-frame-alist '(height . 55))
-          (add-to-list 'default-frame-alist '(height . 37)))) ; Rows
-  (menu-bar-mode -1))
+;; In graphical mode, show the menu bar and hide tool and scroll bars.
+(when (display-graphic-p)
+  (menu-bar-mode 1)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1))
 
-;; Enable basic mouse support in terminals.
+;; In terminal mode, I want basic mouse support and no menu bar
 (unless (display-graphic-p)
+  (menu-bar-mode -1)
   (xterm-mouse-mode 1))
+
+;; set the window size and position in graphical mode to something nice for the current
+;; host:
+(defconst my/frame-geometry
+  ;;            L   T   W  H
+  '(("altair"  600  50 165 90)
+    ("polaris"  40  30 160 48)
+    ("vega"     60  40 180 55)
+    ("sirius"   40  30 140 42)
+    ("rigel"     0   0 120 40))
+  "Alist of (HOSTNAME LEFT TOP WIDTH HEIGHT).")
+
+(defconst my/frame-geometry-default '(80 40 140 45)
+  "Fallback (LEFT TOP WIDTH HEIGHT) for unlisted hosts.")
+
+(defun my/host-key ()
+  "Short, lowercase hostname."
+  (downcase (car (split-string (system-name) "\\."))))
+
+(when (display-graphic-p)
+  (pcase-let* ((`(,left ,top ,width ,height)
+                (or (cdr (assoc (my/host-key) my/frame-geometry))
+                    my/frame-geometry-default)))
+    (setq default-frame-alist
+          `((left . ,left) (top . ,top)
+            (width . ,width) (height . ,height)))
+    (setq initial-frame-alist default-frame-alist)))
 
 ;; Keep transient state in a common directory.
 (defvar user-state-directory
@@ -174,12 +193,12 @@
   :hook (prog-mode . rainbow-delimiters-mode))
 
 ;; Join lines as in Vim.
-(defun dc/join-forward ()
+(defun my/join-forward ()
   "Join the next line to the current one."
   (interactive)
   (join-line 1))
 
-(global-set-key (kbd "C-c J") #'dc/join-forward)
+(global-set-key (kbd "C-c J") #'my/join-forward)
 
 ;; Highlight the current line to make the cursor easier to find.
 (global-hl-line-mode)
