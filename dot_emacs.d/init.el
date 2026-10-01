@@ -53,10 +53,9 @@
 (defconst my/frame-geometry
   ;;            L   T   W  H
   '(("altair"  600  50 165 90)
-    ("polaris"  40  30 160 48)
-    ("vega"     60  40 180 55)
-    ("sirius"   40  30 140 42)
-    ("rigel"     0   0 120 40))
+    ("ucbvax"  600  50 165 90)
+    ("regulus"  50  50 160 48)
+    ("polaris"  20  20 100 33))
   "Alist of (HOSTNAME LEFT TOP WIDTH HEIGHT).")
 
 (defconst my/frame-geometry-default '(80 40 140 45)
