@@ -13,6 +13,10 @@
 
 ;; Add MELPA to end of archives list
 (require 'package)
+;; Batch runs (including Topgrade) skip normal package activation.
+(when noninteractive
+  (package-initialize))
+
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 
 ;; Compile installed packages to native code.
@@ -172,7 +176,7 @@
 
 (use-package doom-modeline
   :ensure t
-  :init
+  :config
   (doom-modeline-mode 1))
 
 (use-package nerd-icons
@@ -375,7 +379,10 @@
         dashboard-center-content t))
 
 ;; Start the Emacs server.
-(server-start)
+(unless noninteractive
+  (require 'server)
+  (unless (server-running-p)
+    (server-start)))
 
 (provide 'init)
 
