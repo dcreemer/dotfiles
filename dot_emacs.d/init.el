@@ -58,7 +58,7 @@
   ;;            L   T   W  H
   '(("altair"  600  50 165 90)
     ("ucbvax"  600  50 165 90)
-    ("regulus"  50  50 160 48)
+    ("regulus"  50  50 140 60)
     ("polaris"  20  20 110 36))
   "Alist of (HOSTNAME LEFT TOP WIDTH HEIGHT).")
 
