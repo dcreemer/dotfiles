@@ -59,7 +59,7 @@
   '(("altair"  600  50 165 90)
     ("ucbvax"  600  50 165 90)
     ("regulus"  50  50 160 48)
-    ("polaris"  20  20 100 33))
+    ("polaris"  20  20 110 36))
   "Alist of (HOSTNAME LEFT TOP WIDTH HEIGHT).")
 
 (defconst my/frame-geometry-default '(80 40 140 45)
