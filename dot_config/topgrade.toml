@@ -1,4 +1,5 @@
 [misc]
+first = ["chezmoi"]
 display_time = true
 cleanup = true
 skip_notify = true
