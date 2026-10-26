@@ -34,10 +34,9 @@ ff() {
         return $?
     fi
 
-    # Reuse a GUI frame, or create one if the server has no suitable frame.
     # Disable the client's fallback so a missing server launches a normal app.
     if command -v emacsclient >/dev/null 2>&1 &&
-        command emacsclient --no-wait --reuse-frame --alternate-editor=false "$@" 2>/dev/null; then
+        command emacsclient --no-wait --alternate-editor=false "$@" 2>/dev/null; then
         return 0
     fi
 
