@@ -59,6 +59,11 @@ ssh host 'bash -lc "command"'
 
 ## Tools
 
+When Emacs is installed, `ff [file ...]` opens files in an existing GUI Emacs
+or launches one in a local desktop session. Over SSH (including X forwarding)
+or without a desktop display, it runs `emacs -nw` in the current terminal.
+`ec` is an alias for `emacsclient` when the client is installed.
+
 Bash completion loads when installed. direnv updates the environment as you
 change directories. If pyenv is installed, it supplies Python shims; use a
 version that supports `pyenv init - --no-push-path bash` so nested shells keep

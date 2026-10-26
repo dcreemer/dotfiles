@@ -67,9 +67,6 @@ if command grep --color=auto . <<<x >/dev/null 2>&1; then
     alias egrep='grep -E --color=auto'
 fi
 
-alias ec='emacsclient'
-alias ff='emacsclient -n'
-
 # history:
 export HISTTIMEFORMAT="[%Y-%m-%d %T] "
 export HISTSIZE=50000
